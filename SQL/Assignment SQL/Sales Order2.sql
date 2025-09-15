@@ -1,0 +1,29 @@
+USE Assignment;
+-- Create the SALES_ORDER2 table
+CREATE TABLE SALES_ORDER2 (
+    ORDERNO VARCHAR(6) PRIMARY KEY CHECK (ORDERNO LIKE 'O%'),
+    CLIENTNO VARCHAR(6) REFERENCES Client_Master2(CLIENTNO),
+    ORDERDATE DATE NOT NULL,
+    DELYADDR VARCHAR(25),
+    SALESMANNO VARCHAR(6) REFERENCES Salesman_Master2(SALESMANNO),
+    DELYTYPE CHAR(1) DEFAULT 'F',
+    BILLYN CHAR(1),
+    DELYDATE DATE CHECK (DELYDATE >= ORDERDATE),
+    ORDERSTATUS VARCHAR(10) CHECK (ORDERSTATUS IN ('In Process', 'Fulfilled', 'BackOrder', 'Cancelled'))
+);
+
+-- Insert values into the SALES_ORDER2 table
+INSERT INTO SALES_ORDER2 (ORDERNO, CLIENTNO, ORDERDATE, DELYADDR, SALESMANNO, DELYTYPE, BILLYN, DELYDATE, ORDERSTATUS) VALUES
+('O00001', 'C10002', '2025-01-01', '456 Maple Avenue', 'S00001', 'F', 'Y', '2025-01-05', 'In Process'),
+('O00002', 'C10003', '2025-02-01', '789 Oak Street', 'S00002', 'P', 'N', '2025-02-05', 'Fulfilled'),
+('O00003', 'C10004', '2025-03-01', '101 Pine Road', 'S00003', 'F', 'Y', '2025-03-05', 'BackOrder'),
+('O00004', 'C10005', '2025-04-01', '202 Birch Lane', 'S00004', 'P', 'N', '2025-04-05', 'Cancelled'),
+('O00005', 'C10006', '2025-05-01', '303 Cedar Boulevard', 'S00005', 'F', 'Y', '2025-05-05', 'In Process'),
+('O00006', 'C10007', '2025-06-01', '404 Spruce Circle', 'S00006', 'P', 'N', '2025-06-05', 'Fulfilled');
+
+-- Select all data from SALES_ORDER2
+SELECT * FROM SALES_ORDER2;
+
+
+
+SELECT * FROM SALES_ORDER;
