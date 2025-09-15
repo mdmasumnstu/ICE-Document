@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID Card</title>
+
+   <style>
+    .id_card {
+      width: 350px;
+      height: 560px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 10px 2px;
+      margin: 50px auto;
+      text-align: center;
+      position: relative;
+    }
+    .student{
+        color:white;
+        font-size:x-large;
+        background-color: darkblue;
+        font-weight: 800;
+        padding: 1px;
+    }
+    .nstu{
+        color:blue;
+        font-size:large;
+        font-weight: 900;
+        max-width: fit-content;
+        padding: 10px 7px;
+    }
+  .photo-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px; 
+  margin: 20px 0;
+}
+
+.Picture, .QR {
+  width: 100px;
+  height: 120px;
+  border: 2px solid #000;
+}
+
+    .info {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+      
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      right: 20px;
+      font-size: 16px;
+      text-align: left;
+      font-weight: 500;
+      font-size: bold;
+    }
+    .signature {
+      text-align: right;
+      font-style: bold;
+     text-decoration: overline; text-decoration-color: black; text-decoration-thickness: 2px;
+    }
+
+    .card {
+      width: 350px;
+      height: 540px;
+      background: #fff;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 10px 2px;
+      margin: 50px auto;
+      text-align: center;
+      position: relative;
+    }
+    .image {
+  width: 140px;
+  height: 120px;
+  border-top: #000 solid 10px;
+  border-left: black solid 10px;
+  border-bottom: black solid 10px;
+  border-right: black solid 60px;
+ }
+ .photo-container1 {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+ .webmail{
+        color:white;
+        font-size:large;
+        background-color: rgb(0, 0, 8);
+        font-weight: 800;
+        text-align: left;
+    }
+    .backText{
+      font-size: larger;
+    }
+
+   </style>
+</head>
+<body>
+
+ <div class="id_card">
+        <div class="student"> Student </div>
+    <div>
+        <img src="./Student Id Card_files/nstu.jpeg" alt="NSTU logo" title="logo">
+    </div>
+    <div class="nstu">Noakhali Science &amp; Technology University</div>
+    
+    <div class="photo-container">
+    <img src="./Student Id Card_files/20230527174955380.jpg" alt="picture" title="profile picture" class="Picture">
+    <img src="./Student Id Card_files/qr.jpg" alt="QR" title="QR Code" class="QR">
+</div>
+    <div class="info">
+        <strong>Md. Masum</strong><br>
+        <strong>Roll No: MUH2211040M</strong><br>
+        <strong>Blood Group: B(+ve)</strong><br>
+        <strong>Department of Information And Communication Engineering</strong><br>
+        <b>Valid till June 2026</b><p></p>
+    </div>
+    <div class="footer">
+        <div>MUH2211040M</div>
+        <div class="signature">Registrar</div>
+    </div>
+</div>
+
+
+
+
+<div class="card">
+
+    <div class="photo-container1">
+      <img src="./Student Id Card_files/scan me.jpg" class="image">
+    </div>
+   <div class="backText">
+    <p><strong>If Found Please Return to:</strong></p>
+  </div><br>
+<div class="backText">
+  <strong>Registrar</strong><br>
+  <strong>Noakhali Science and Technology University</strong><br>
+  <strong>Noakhali-3814, Bangladesh.</strong>
+</div>
+<br><br>
+<div class="backText">
+  <strong>Emergency Contact: </strong><br>
+  <strong>Registrar: +88 02334496522</strong><br>
+                    <strong>+88 01720197824</strong>
+</div>
+<br><br>
+
+<div class="webmail">
+  <strong>Official website: www.nstu.edu.bd</strong><br>
+  <strong>E-mail: registrar@office.nstu.edu.bd</strong>
+</div>
+</div>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+      </body></html>
