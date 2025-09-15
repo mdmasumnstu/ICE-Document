@@ -1,0 +1,52 @@
+ /*
+    Universal Selector
+ *{
+    background-color: red;
+    color: white;
+    font-family: fantasy;
+    font-weight:500;
+  }
+*/
+
+/*
+Grouping Selector
+
+    h1,p{
+         background-color: yellow;
+         color:darkgreen;
+        }
+*/
+
+/*
+    Combinators: Decendant Selector
+    div p{
+        color:green;
+        background-color:black;
+    }
+*/
+    
+/*Child Selector
+    div section > p{
+        color:red;
+        background-color:green;
+    }
+*/
+
+/*
+    Adjacent Sibling Selector
+    div +p{
+        color:green;
+        font-weight: 700;
+    }
+*/
+/*
+    Adjacent Sibling Selector that Selec All 
+*/
+    div ~p{
+        color:yellow;
+        font-weight: 700;
+        background-position: center;
+        background-color: black;
+    }
+
+    

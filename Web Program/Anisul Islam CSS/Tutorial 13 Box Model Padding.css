@@ -1,0 +1,22 @@
+body{
+    margin:0px;
+    margin-top: 0px;
+    padding: 0px;;
+}
+#ban{
+    color:green;
+    background-color: red;
+    width:fit-content;
+    padding-left: 23px;
+    padding-right: 34px;
+    padding-top: 34px;
+    padding-bottom: 23px;
+}
+#pak{
+    color:red;
+    background-color: green;
+    width:fit-content;
+    padding-inline: 32px;
+    padding-block: 45px;
+    padding:32px;
+}

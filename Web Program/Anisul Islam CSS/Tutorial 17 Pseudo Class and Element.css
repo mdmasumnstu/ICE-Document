@@ -1,0 +1,49 @@
+a.w3school:hover{
+    color:red;
+}
+a.ban:hover{
+    color:green;
+}
+input{
+    padding: 10px;
+    font-size: 23px;
+    color: red;
+    width:max-content;
+}
+/*
+    input:hover{
+        background-color:yellow;
+    }
+*/
+input:focus{
+    background-color: chartreuse;
+}
+
+table,tr,td,th{
+    border: 1px solid red;
+}
+
+tr:nth-child(even)
+{
+    background-color: green;
+}
+tr:focus{
+    color:crimson;
+}
+
+p.p1::first-letter{
+    font-size: xx-large;
+    color:crimson;
+    font-weight: 900;
+    display: flex;
+}
+p.p1::first-line{
+    background-color: bisque;
+}
+p::after{ 
+    content: "<";
+}
+
+p::before{
+    content: ">";
+}

@@ -1,0 +1,21 @@
+.style{
+    color: firebrick;
+    font-size:larger;
+}
+.ban{
+    font-family: monospace;
+    font-weight: 500;
+}
+/*Section 2*/
+#section{
+    color:rgb(0, 255, 85);
+    font-stretch: expanded;
+    font-size: x-larger;
+    background-color: crimson;
+}
+#section h2{
+    color:chocolate;
+}
+#section p{
+    color: pink;
+}

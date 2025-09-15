@@ -1,0 +1,14 @@
+.ban{
+    background-color:green;
+    color:red;
+    width: 78px;
+    margin: 23px;
+    margin-top:12px;
+    margin-left: 50px;
+}
+.new{
+    color:red;
+    background-color: green;
+    width:90px;
+    margin:32px 45px 12px 56px;
+}

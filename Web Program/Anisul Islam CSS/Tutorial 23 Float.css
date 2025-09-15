@@ -1,0 +1,16 @@
+img
+{
+    height: 180px;
+    width: 200px;
+    margin-right: 12px;
+    margin-top: 12px;
+    float:left;
+}
+#ban{
+    float:right;
+    color:red;
+    background-color:aqua;
+    font-size:3rem;
+    height: 80px;
+    width: 250px;
+}

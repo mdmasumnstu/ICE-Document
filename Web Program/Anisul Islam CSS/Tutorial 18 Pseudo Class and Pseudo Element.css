@@ -1,0 +1,42 @@
+p:hover{
+    color:red;
+    background-color: green;
+}
+/*
+    .para:hover{
+    color:red;
+    background-color: green;
+}
+*/
+/*
+    p:nth-child(3){
+        color:red;
+        background-color: green;
+    }
+*/
+ li:nth-of-type(2){
+    color:green;
+    background-color: rgb(246, 60, 60);
+ }
+/*
+    Pseudo Element
+*/
+    .Element p::first-letter{
+        color:red;
+        font-size: 1.8rem;
+    }
+
+    .Ele p::first-line{
+        color:green;
+    }
+
+    ::selection{
+        color:chocolate;
+        background-color: aquamarine;
+    }
+
+    input::placeholder
+    {
+        color:rgb(246, 60, 60);
+        background-color: rgb(10, 5, 1);
+    }

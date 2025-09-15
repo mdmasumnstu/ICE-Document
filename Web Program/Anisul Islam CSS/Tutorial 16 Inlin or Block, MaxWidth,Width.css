@@ -1,0 +1,22 @@
+#dhaka{
+    color:red;
+    background-color: green;
+    display:inline;
+    margin: 0px;
+}
+#ds{
+    color:red;
+    background-color: green;
+    margin: 5px;
+    padding: 6px;
+    border: 5px orangered inset;
+    width:500px;
+}
+#lor{
+    color:red;
+    background-color: green;
+    margin: 10px;
+    padding:6px;
+    border:7px black solid;
+    max-width: 455px;
+}

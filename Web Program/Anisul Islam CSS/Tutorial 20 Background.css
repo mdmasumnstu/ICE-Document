@@ -1,0 +1,12 @@
+body{
+    /*
+    background-color: aqua;
+    background-image: url(nature.jpeg);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size:34opx;
+    background-attachment: fixed;
+    */
+
+    background:red right top fixed no-repeat url(nature.jpeg);
+}

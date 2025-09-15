@@ -1,0 +1,12 @@
+.grad{
+    height: 400px;
+    width: auto;
+    background-color: aqua;
+    /*background-image: linear-gradient(to left,red,green,yellow,rgb(30, 0, 255));
+    *//*background-image: radial-gradient(red,green,yellow,rgb(30, 0, 255));
+    *//*background-image: conic-gradient(red,green,orange,black,white,yellow,rgb(30, 0, 255));
+    *//*background-image: repeating-conic-gradient(red 0deg 10deg,green 10deg 20deg,rgb(30, 0, 255) 20deg 30deg);
+    */
+    background-image: repeating-conic-gradient(red 0%,green 20%);
+    border-radius: 50%;
+}

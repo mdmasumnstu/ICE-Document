@@ -1,0 +1,43 @@
+/*
+.TextAlign
+{
+   text-align: right;
+}
+.justify{
+    text-align: center;
+}
+*/
+
+/*
+  .decoration
+  {
+    text-decoration: underline;
+   }
+.decorat
+{
+    text-decoration: underline;
+}
+*/
+
+/*
+.decoration
+  {
+    text-indent 34px;;
+   }
+*/
+
+/*
+ .decoration
+  {
+    text-transform: capitalize;
+   }
+*/
+
+.decoration
+  {
+    text-shadow: 2px 1px rgb(239, 11, 11);
+    direction: rtl;
+    letter-spacing: 5px;
+    word-spacing: 0px;
+    line-height: 10px;
+   }

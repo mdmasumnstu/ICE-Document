@@ -1,0 +1,18 @@
+#border{
+    color:brown;
+    background-color: green;
+    padding-inline: 7px;
+    padding-top:1px;
+    padding-bottom:1px;
+    width:fit-content;
+    border:3px rgb(255, 0, 0) inset;
+    border-radius: 23px;
+}
+#ban{
+    color:green;
+    background-color:yellow;
+    width:fit-content;
+    border-radius:21px;
+    border:23px red solid;
+    padding:3px;
+}
