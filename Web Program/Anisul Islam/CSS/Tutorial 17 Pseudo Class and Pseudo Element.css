@@ -1,0 +1,13 @@
+input{
+    padding: 5px;
+    font-size: large;
+    max-width: 300px;
+}
+
+input:hover{
+    background-color: aqua;
+}
+
+input:focus{
+    background-color: aqua;
+}

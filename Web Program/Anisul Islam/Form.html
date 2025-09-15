@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+</head>
+<body>
+    <h2>Registration Form</h2>
+    <form>
+       <div>
+         <level for="FullName">FullName:</level> 
+         <input type="text" name="fullname" id="fullname" required>
+       </div><br>
+       <div>
+        <level for="Email">Email:</level> 
+        <input type="text" name="email" id="email" required>
+      </div><br>
+      <div>
+        <level for="Password">Password:</level> 
+        <input type="password" name="password" id="password" required>
+      </div><br>
+      <div>
+        <level for="Date of Birth">Date of Birth:</level> 
+        <input type="date" name="date of birth" id="date of birth" required>
+      </div><br>
+      <div>
+        <level for="Photo">Choose Your Photo:</level> 
+        <input type="file" name="Photo" id="Photo" required>
+      </div><br>
+      <div>
+        <level for="Gender">Gender:</level> 
+
+        <input type="radio" name="gender" id="gender" value="Male">Male
+
+        <input type="radio" name="gender" id="gender" value="Female">Female
+
+        <input type="radio" name="gender" id="gender" value="Other">Other
+      </div><br>
+
+
+      <div>
+        <level for="Religion">Religion:</level> 
+        
+        <input type="checkbox" name="religion" id="religion" value="Islam" checked>Islam
+
+        <input type="checkbox" name="Religion" id="gender" value="Hindu">Hindu
+
+        <input type="checkbox" name="religion" id="religion" value="Other">Other
+      </div><br>
+
+      <div>
+        <level for="Division">Division:</level>
+        <select name="Division">
+            <option value="Dhaka">Dhaka</option>
+            <option value="Rajshahi" selected>Rajshahi</option>
+            <option value="Chattogram">Chattogram</option>
+            <option value="Barishal">Barishal</option>
+        </select>
+      </div>
+
+      <div>
+        <level for="message">Message:</level><br>
+        <textarea col="20" rows="20"></textarea>
+      </div>
+
+      <div>
+        <input type="submit" value="Register">
+        <input type="reset" value="Clear">
+      </div>
+    </form>
+</body>
+</html>

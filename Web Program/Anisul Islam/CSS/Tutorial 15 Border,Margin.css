@@ -1,0 +1,10 @@
+body{
+    background-color: gray;
+}
+.container{
+    background-color: green;
+    width: 300px;
+    padding: 5px;
+    border:5px solid red;
+    margin: 5px;
+}

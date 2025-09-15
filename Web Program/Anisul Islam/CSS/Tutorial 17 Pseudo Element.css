@@ -1,0 +1,16 @@
+body{
+    color:gray;
+}
+p::before{
+    content: "";
+}
+p::after{
+    content:"<"
+}
+p:hover{
+    color:blue;
+}
+p::first-letter{
+    color:brown;
+    font-size: xx-large;
+}

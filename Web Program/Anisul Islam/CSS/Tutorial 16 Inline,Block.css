@@ -1,0 +1,11 @@
+body{
+    background-color:rgb(169, 138, 12) ;
+}
+h1{
+    background-color:chartreuse;
+    display: inline;
+}
+h2{
+    background-color: cornsilk;
+    display:inline;
+}

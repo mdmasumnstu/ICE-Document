@@ -1,0 +1,7 @@
+h1,p,h2,h3{
+    background-color: black;
+    font-weight: 900;
+    color:white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-inline: 2%;
+}

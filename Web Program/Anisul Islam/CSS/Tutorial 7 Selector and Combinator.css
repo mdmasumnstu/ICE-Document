@@ -1,0 +1,12 @@
+h1{
+    background-color: green;
+}
+.para1{
+    background-color: rgb(255, 47, 158);
+    font-size: 23px;
+}
+.center{
+    text-align: center;
+    font-weight: 700;
+    font-size: 45px;
+}
