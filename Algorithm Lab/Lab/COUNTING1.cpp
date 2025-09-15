@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+
+void input_and_output(int a[], int n) 
+{
+    cout << "Enter the element: "<<endl;
+	int i;
+    for (i = 0; i < n; i++) 
+	{
+        cin >> a[i];
+    }
+
+    cout << "The Array is: "<<endl;
+    for (int i = 0; i < n; i++) 
+	{
+        cout << a[i] << " ";
+    }
+    cout << endl;
+}
+
+void counting(int a[], int n) 
+{
+    int max = a[0],i;
+    for (i = 1; i < n; i++) 
+	{
+        if (a[i] > max) 
+		{
+            max = a[i];
+        }
+    }
+
+	cout<<"The Maximum Value: "<<max<<endl;
+
+	int count[max + 1] = {0};
+	for(i=0;i<n;i++)
+	{
+		count[a[i]]++;
+	}
+
+
+	for(i=1;i<=max;i++)
+	{
+		count[i]=count[i]+count[i-1];
+	}
+
+	int b[n];
+	for(i=n-1;i>=0;i--)
+	{
+		b[--count[a[i]]]=a[i];
+	}
+
+	for(i=0;i<n;i++)
+	{
+		a[i]=b[i];
+	}
+}
+
+int main() 
+{
+    int n;
+    cout << "Enter the size: "<<endl;
+    cin >> n;
+
+    int a[n];
+    input_and_output(a, n); 
+
+    counting(a, n); 
+
+    cout << "Sorted Array: "<<endl;
+    for (int i = 0; i < n; i++) 
+	{
+        cout << a[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
