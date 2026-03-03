@@ -1,0 +1,15 @@
+h1
+{
+    color:red;
+    background-color: green;
+}
+body
+{
+    background-color:black;
+    background-image: url(admission.jpeg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+p{
+    color: yellow;
+}
