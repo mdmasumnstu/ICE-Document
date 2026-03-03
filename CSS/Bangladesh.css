@@ -1,0 +1,28 @@
+h1{
+    color:brown;
+    background-color: darkorchid;
+    background-position: 12px;
+    padding-left: 12px;
+    text-align: center;
+}
+.p1{
+    font-size:40px;
+    color:green;
+}
+.p2{
+    color:aquamarine;
+}
+.p3{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 900;
+    background-color: black;
+    padding:23px;
+}
+#u23{
+ color:blueviolet;
+ font-weight: 800;
+ background-position:12%;
+ font: weight 1px;
+ font-weight: 400;
+ font-style: unset;
+}

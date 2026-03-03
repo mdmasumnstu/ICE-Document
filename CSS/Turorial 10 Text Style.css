@@ -1,0 +1,15 @@
+.align{
+    text-align: center;
+}
+.decoration{
+    text-decoration:underline;
+    text-indent: 50px;
+    text-shadow: 3px 3px rgb(38, 0, 255);
+}
+.decoration1{
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    word-spacing: 3px;
+    line-height: 12px;
+    
+}
