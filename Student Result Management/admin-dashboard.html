@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Result Management</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Admin Dashboard</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link" data-view="dashboard"><span>🏠</span>Dashboard</a>
+                <a href="#" class="sidebar-link" data-view="add-student"><span>➕</span>Add Student</a>
+                <a href="#" class="sidebar-link" data-view="manage-students"><span>👥</span>Manage Students</a>
+                <a href="#" class="sidebar-link" data-view="manage-courses"><span>📚</span>Add Courses</a>
+                <a href="#" class="sidebar-link" data-view="courses"><span>📚</span>Courses</a>
+                <a href="#" class="sidebar-link" data-view="manage-results"><span>📊</span>Manage Results</a>
+                <a href="Homepage.html" class="sidebar-link" id="homeButton"><span>↩️</span>Back to Home</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="sidebar-logout" id="logoutButton">Logout</button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <header class="content-header content-header--centered">
+                <div>
+                    <h1>Welcome, Admin</h1>
+                </div>
+            </header>
+
+            <section class="admin-card" id="resultOverview">
+                <header>
+                    <h2>Search Information</h2>
+                </header>
+                <form class="filter-form" id="filterForm">
+                    <div class="filter-field">
+                        <label for="filterSession">Session</label>
+                        <select id="filterSession">
+                            <option value=""selected>Select Session</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filterDepartment">Department</label>
+                        <select id="filterDepartment">
+                            <option value=""selected>Select Department</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filterYear">Year</label>
+                        <select id="filterYear">
+                            <option value=""selected>Select Year</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filterTerm">Term</label>
+                        <select id="filterTerm">
+                            <option value=""selected>Select Term</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit" class="admin-button admin-button--apply" id="applyFilters">Apply</button>
+                        <button type="button" class="admin-button admin-button--reset" id="resetFilters">Reset</button>
+                    </div>
+                </form>
+
+                <div class="table-wrapper" aria-live="polite">
+                    <table class="admin-table" id="studentTable">
+                        <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Term GPA (TGPA)</th>
+                            <th>Cumulative GPA (CGPA)</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+                    </table>
+                    <div class="table-empty" id="studentTableEmpty" hidden>
+                        Select session, department, year, and term to load students.
+                    </div>
+                </div>
+            </section>
+
+        <section class="admin-card" id="actionPanel" hidden>
+            <header>
+                <h2 id="actionPanelTitle"></h2>
+            </header>
+            <div id="actionPanelBody"></div>
+        </section>
+        </main>
+    </div>
+
+<script>
+(function () {
+    const defaultStudents = [
+        {
+            id: '2211040',
+            name: 'Nusrat Jahan',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T1',
+            tgpa: 3.82,
+            cgpa: 3.65,
+            department: 'CSTE',
+            courses: [
+                { code: 'CSTE2201', name: 'Data Structures', credits: 3, gpa: 3.7, grade: 'A-' },
+                { code: 'CSTE2202', name: 'Algorithms', credits: 3, gpa: 3.9, grade: 'A' },
+                { code: 'MATH2203', name: 'Discrete Mathematics', credits: 3, gpa: 3.6, grade: 'A-' }
+            ]
+        },
+        {
+            id: '2211045',
+            name: 'Mahmud Hasan',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T1',
+            tgpa: 3.55,
+            cgpa: 3.42,
+            department: 'CSTE',
+            courses: [
+                { code: 'CSTE2201', name: 'Data Structures', credits: 3, gpa: 3.4, grade: 'B+' },
+                { code: 'CSTE2204', name: 'Object Oriented Programming', credits: 3, gpa: 3.6, grade: 'A-' },
+                { code: 'STAT2205', name: 'Probability and Statistics', credits: 3, gpa: 3.7, grade: 'A-' }
+            ]
+        },
+        {
+            id: '2211050',
+            name: 'Tahmid Alam',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T2',
+            tgpa: 3.9,
+            cgpa: 3.74,
+            department: 'ICE',
+            courses: [
+                { code: 'ICE2301', name: 'Database Systems', credits: 3, gpa: 3.9, grade: 'A' },
+                { code: 'ICE2303', name: 'Web Engineering', credits: 3, gpa: 3.8, grade: 'A-' },
+                { code: 'ICE2307', name: 'Computer Networks', credits: 3, gpa: 4.0, grade: 'A+' }
+            ]
+        },
+        {
+            id: '2111002',
+            name: 'Sharmin Akter',
+            session: '2022-2023',
+            year: 'Y-3',
+            term: 'T1',
+            tgpa: 3.68,
+            cgpa: 3.58,
+            department: 'FTNS',
+            courses: [
+                { code: 'EEE3301', name: 'Signals and Systems', credits: 3, gpa: 3.6, grade: 'A-' },
+                { code: 'EEE3305', name: 'Electromagnetics', credits: 3, gpa: 3.7, grade: 'A-' },
+                { code: 'EEE3309', name: 'Microprocessors', credits: 3, gpa: 3.75, grade: 'A-' }
+            ]
+        }
+    ];
+
+    const defaultCourses = [
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'CSTE2201', name: 'Data Structures', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'CSTE2202', name: 'Algorithms', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'MATH2203', name: 'Discrete Mathematics', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2301', name: 'Database Systems', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2303', name: 'Web Engineering', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2307', name: 'Computer Networks', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3301', name: 'Signals and Systems', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3305', name: 'Electromagnetics', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3309', name: 'Microprocessors', credits: 3 }
+    ];
+
+    const FILTER_DEPARTMENTS = ['CSTE', 'FIMS', 'Pharmacy', 'ACCE', 'FTNS', 'ESDM', 'DBA', 'ICE'];
+    const KNOWN_SESSIONS = ['2019-2020', '2020-2021', '2021-2022', '2022-2023', '2023-2024', '2024-2025'];
+    const KNOWN_YEARS = ['Y-1', 'Y-2', 'Y-3', 'Y-4'];
+    const KNOWN_TERMS = ['T1', 'T2'];
+
+    const resolveDepartment = (value) => {
+        if (typeof value !== 'string') {
+            return '';
+        }
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return '';
+        }
+        const match = FILTER_DEPARTMENTS.find((name) => name.toLowerCase() === trimmed.toLowerCase());
+        return match || '';
+    };
+
+    const normalizeText = (value) => {
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+        if (typeof value === 'number') {
+            return value.toString();
+        }
+        return '';
+    };
+
+    const recalculateCgpaByCohort = (students) => {
+        const groups = new Map();
+        students.forEach((student, index) => {
+            const session = normalizeText(student.session);
+            const year = normalizeText(student.year);
+            const term = normalizeText(student.term);
+            const key = `${session}|${year}|${term}`;
+            if (!groups.has(key)) {
+                groups.set(key, []);
+            }
+            groups.get(key).push({ index, tgpa: Number(student.tgpa) || 0 });
+        });
+
+        const updated = students.map((student) => {
+            const tgpaValue = Number(student.tgpa);
+            return {
+                ...student,
+                tgpa: Number.isFinite(tgpaValue) ? Number(tgpaValue.toFixed(2)) : 0,
+                cgpa: 0
+            };
+        });
+
+        groups.forEach((entries) => {
+            if (!entries.length) {
+                return;
+            }
+            const total = entries.reduce((acc, entry) => acc + entry.tgpa, 0);
+            const average = entries.length ? Number((total / entries.length).toFixed(2)) : 0;
+            entries.forEach(({ index }) => {
+                updated[index] = {
+                    ...updated[index],
+                    cgpa: average
+                };
+            });
+        });
+
+        return updated;
+    };
+
+    const filterForm = document.getElementById('filterForm');
+    const sessionSelect = document.getElementById('filterSession');
+    const departmentSelect = document.getElementById('filterDepartment');
+    const yearSelect = document.getElementById('filterYear');
+    const termSelect = document.getElementById('filterTerm');
+    const tableBody = document.getElementById('studentTableBody');
+    const tableEmpty = document.getElementById('studentTableEmpty');
+    const resetButton = document.getElementById('resetFilters');
+    const homeButton = document.getElementById('homeButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const statStudents = document.getElementById('statStudents');
+    const statResults = document.getElementById('statResults');
+    const statSubjects = document.getElementById('statSubjects');
+    const statPassRate = document.getElementById('statPassRate');
+    const recentStudents = document.getElementById('recentStudents');
+    const recentResults = document.getElementById('recentResults');
+    const recentStudentsViewAll = document.getElementById('recentStudentsViewAll');
+    const recentResultsViewAll = document.getElementById('recentResultsViewAll');
+    const navLinks = document.querySelectorAll('.sidebar-link[data-view]');
+    const statSection = document.querySelector('.stat-cards');
+    const panelsSection = document.querySelector('.grid-panels');
+    const overviewSection = document.getElementById('resultOverview');
+    const actionPanel = document.getElementById('actionPanel');
+    const actionPanelTitle = document.getElementById('actionPanelTitle');
+    const actionPanelBody = document.getElementById('actionPanelBody');
+    const root = document.body;
+
+    const cloneStudentRecords = (students) => (
+        Array.isArray(students) ? students : []
+    ).map((student) => ({
+        ...student,
+        courses: Array.isArray(student.courses)
+            ? student.courses.map((course) => ({ ...course }))
+            : []
+    }));
+
+    const normalizeCourses = (courses) => (
+        Array.isArray(courses) ? courses : []
+    ).map((course) => ({
+        ...course,
+        department: resolveDepartment(course.department) || 'General'
+    }));
+
+    const encodeStateForQuery = (payload) => {
+        try {
+            return encodeURIComponent(JSON.stringify(payload));
+        } catch (error) {
+            return '';
+        }
+    };
+
+    const decodeStateFromQuery = () => {
+        const params = new URLSearchParams(window.location.search);
+        const encoded = params.get('state');
+        if (!encoded) {
+            return null;
+        }
+        try {
+            return JSON.parse(decodeURIComponent(encoded));
+        } catch (error) {
+            return null;
+        }
+    };
+
+    const clearStateParamFromUrl = () => {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has('state')) {
+            return;
+        }
+        params.delete('state');
+        const query = params.toString();
+        const newUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
+        window.history.replaceState({}, '', newUrl);
+    };
+
+    const initialStatePayload = decodeStateFromQuery();
+    const studentsSource = Array.isArray(initialStatePayload?.students)
+        ? initialStatePayload.students
+        : defaultStudents;
+    const coursesSource = Array.isArray(initialStatePayload?.courses)
+        ? initialStatePayload.courses
+        : defaultCourses;
+
+    const state = {
+        students: recalculateCgpaByCohort(cloneStudentRecords(studentsSource)),
+        courses: normalizeCourses(coursesSource)
+    };
+    clearStateParamFromUrl();
+
+    const createStateSnapshot = () => ({
+        students: state.students.map((student) => ({
+            ...student,
+            courses: Array.isArray(student.courses)
+                ? student.courses.map((course) => ({ ...course }))
+                : []
+        })),
+        courses: state.courses.map((course) => ({ ...course }))
+    });
+
+    let filtersSubmitted = false;
+    const FILTER_PROMPT_MESSAGE = 'Select session, department, year, and term, then click Apply to view students.';
+    const PAGE_SIZE = 20;
+    let manageStudentsPage = 1;
+    let manageResultsPage = 1;
+    let currentView = 'dashboard';
+
+    const computeTgpa = (courses) => {
+        if (!courses.length) {
+            return 0;
+        }
+        const totals = courses.reduce((acc, course) => {
+            const credits = Number(course.credits) || 0;
+            const gpa = Number(course.gpa) || 0;
+            return {
+                credits: acc.credits + credits,
+                weighted: acc.weighted + (credits * gpa)
+            };
+        }, { credits: 0, weighted: 0 });
+        if (!totals.credits) {
+            return 0;
+        }
+        return Number((totals.weighted / totals.credits).toFixed(2));
+    };
+
+    const persistCourses = (courses) => {
+        state.courses = normalizeCourses(courses);
+        renderStats();
+    };
+
+    const persistStudents = (students) => {
+        const normalizedStudents = students.map((student) => {
+            const departmentValue = resolveDepartment(student.department) || normalizeText(student.department) || '';
+            const tgpaValue = Number(student.tgpa);
+            const cgpaValue = Number(student.cgpa);
+            return {
+                ...student,
+                department: departmentValue,
+                tgpa: Number.isFinite(tgpaValue) ? Number(tgpaValue.toFixed(2)) : 0,
+                cgpa: Number.isFinite(cgpaValue) ? Number(cgpaValue.toFixed(2)) : 0
+            };
+        });
+        const withCgpa = recalculateCgpaByCohort(normalizedStudents);
+        state.students = withCgpa;
+        renderStats();
+        renderRecentStudents();
+        renderRecentResults();
+        renderFilters();
+        renderTable();
+    };
+
+    const deriveGradeFromGpa = (gpaValue) => {
+        if (Number.isNaN(gpaValue)) {
+            return '';
+        }
+        if (gpaValue >= 4) {
+            return 'A+';
+        }
+        if (gpaValue >= 3.75) {
+            return 'A';
+        }
+        if (gpaValue >= 3.5) {
+            return 'A-';
+        }
+        if (gpaValue >= 3.25) {
+            return 'B+';
+        }
+        if (gpaValue >= 3) {
+            return 'B';
+        }
+        if (gpaValue >= 2.75) {
+            return 'B-';
+        }
+        if (gpaValue >= 2.5) {
+            return 'C+';
+        }
+        if (gpaValue >= 2.25) {
+            return 'C-';
+        }
+        if (gpaValue >= 2) {
+            return 'D';
+        }
+        if (gpaValue >= 0) {
+            return 'F';
+        }
+        return '';
+    };
+
+    const computeStudentMetrics = (courses) => ({
+        tgpa: computeTgpa(courses),
+        cgpa: 0
+    });
+
+    const setActiveLink = (view) => {
+        navLinks.forEach((link) => {
+            link.classList.toggle('is-active', link.dataset.view === view);
+        });
+        currentView = view;
+    };
+
+    const showActionMessage = (container, message, type = 'info') => {
+        const messageEl = container.querySelector('.action-message');
+        if (!messageEl) {
+            return;
+        }
+        messageEl.textContent = message;
+        messageEl.hidden = false;
+        messageEl.classList.remove('action-message--error', 'action-message--success');
+        if (type === 'success') {
+            messageEl.classList.add('action-message--success');
+        }
+        if (type === 'error') {
+            messageEl.classList.add('action-message--error');
+        }
+    };
+
+    const clearActionMessage = (container) => {
+        const messageEl = container.querySelector('.action-message');
+        if (messageEl) {
+            messageEl.hidden = true;
+            messageEl.textContent = '';
+            messageEl.classList.remove('action-message--error', 'action-message--success');
+        }
+    };
+
+    const showDashboardSections = () => {
+        if (statSection) {
+            statSection.hidden = false;
+        }
+        if (panelsSection) {
+            panelsSection.hidden = false;
+        }
+        if (overviewSection) {
+            overviewSection.hidden = true; // Ensure Result Entry Overview is hidden
+        }
+        if (actionPanel) {
+            actionPanel.hidden = true;
+        }
+        if (actionPanelTitle) {
+            actionPanelTitle.textContent = '';
+        }
+        if (actionPanelBody) {
+            actionPanelBody.innerHTML = '';
+        }
+    };
+
+    const showActionPanel = (title, renderer) => {
+        if (!actionPanel || !actionPanelBody) {
+            return;
+        }
+
+        if (statSection) {
+            statSection.hidden = true;
+        }
+        if (panelsSection) {
+            panelsSection.hidden = true;
+        }
+        if (overviewSection) {
+            overviewSection.hidden = true;
+        }
+
+        actionPanel.hidden = false;
+        if (actionPanelTitle) {
+            actionPanelTitle.textContent = title || '';
+        }
+
+        actionPanelBody.innerHTML = '';
+        if (typeof renderer === 'function') {
+            renderer(actionPanelBody);
+        }
+    };
+
+    const renderStats = () => {
+        if (!statStudents || !statResults || !statSubjects || !statPassRate) {
+            return;
+        }
+
+        const totalStudents = state.students.length;
+        const totalResults = state.students.reduce((acc, student) => acc + ((student.courses || []).length), 0);
+        const subjectSet = new Set();
+        let passedCourses = 0;
+        state.students.forEach((student) => {
+            (student.courses || []).forEach((course) => {
+                if (course.code) {
+                    subjectSet.add(course.code);
+                }
+                if ((course.grade || '').toUpperCase() !== 'F') {
+                    passedCourses += 1;
+                }
+            });
+        });
+        state.courses.forEach((course) => {
+            if (course.code) {
+                subjectSet.add(course.code);
+            }
+        });
+        const totalCourses = totalResults;
+        const passRate = totalCourses ? Math.round((passedCourses / totalCourses) * 100) : 0;
+
+        statStudents.textContent = totalStudents.toString();
+        statResults.textContent = totalResults.toString();
+        statSubjects.textContent = subjectSet.size.toString();
+        statPassRate.textContent = `${passRate}%`;
+    };
+
+    const renderRecentStudents = () => {
+        if (!recentStudents) {
+            return;
+        }
+        recentStudents.innerHTML = '';
+        if (!state.students.length) {
+            recentStudents.textContent = 'No recent students found.';
+            return;
+        }
+        const list = document.createElement('ul');
+        list.style.listStyle = 'none';
+        list.style.display = 'flex';
+        list.style.flexDirection = 'column';
+        list.style.gap = '10px';
+
+        const items = [...state.students].slice(-3).reverse();
+        items.forEach((student) => {
+            const item = document.createElement('li');
+            item.textContent = `${student.name} • ${student.id} • ${student.session}`;
+            list.appendChild(item);
+        });
+        recentStudents.appendChild(list);
+    };
+
+    const renderRecentResults = () => {
+        if (!recentResults) {
+            return;
+        }
+        const courseEntries = [];
+        state.students.forEach((student) => {
+            (student.courses || []).forEach((course) => {
+                courseEntries.push({
+                    studentName: student.name,
+                    studentId: student.id,
+                    code: course.code,
+                    grade: course.grade,
+                    gpa: course.gpa
+                });
+            });
+        });
+        recentResults.innerHTML = '';
+        if (!courseEntries.length) {
+            recentResults.textContent = 'No recent results found.';
+            return;
+        }
+        const list = document.createElement('ul');
+        list.style.listStyle = 'none';
+        list.style.display = 'flex';
+        list.style.flexDirection = 'column';
+        list.style.gap = '10px';
+
+        courseEntries.slice(-3).reverse().forEach((entry) => {
+            const item = document.createElement('li');
+            item.textContent = `${entry.code} • ${entry.grade} GPA ${entry.gpa} — ${entry.studentName}`;
+            list.appendChild(item);
+        });
+        recentResults.appendChild(list);
+    };
+
+    const getUnique = (items, key) => Array.from(new Set(items.map((item) => item[key]))).sort();
+
+    const populateSelect = (selectElement, values, placeholder) => {
+        selectElement.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        defaultOption.textContent = placeholder;
+        selectElement.appendChild(defaultOption);
+        values.forEach((value) => {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = value;
+            selectElement.appendChild(option);
+        });
+    };
+
+    const clearTableRows = () => {
+        if (tableBody) {
+            tableBody.innerHTML = '';
+        }
+    };
+
+    const showTableMessage = (message) => {
+        if (!tableEmpty) {
+            return;
+        }
+        tableEmpty.hidden = false;
+        tableEmpty.textContent = message;
+    };
+
+    const renderFilters = () => {
+        populateSelect(sessionSelect, KNOWN_SESSIONS, 'Select session');
+        if (departmentSelect) {
+            populateSelect(departmentSelect, FILTER_DEPARTMENTS, 'Select department');
+        }
+        populateSelect(yearSelect, KNOWN_YEARS, 'Select year');
+        populateSelect(termSelect, KNOWN_TERMS, 'Select term');
+        filtersSubmitted = false;
+        clearTableRows();
+        showTableMessage(FILTER_PROMPT_MESSAGE);
+    };
+
+    const getFilteredStudents = () => {
+        const session = sessionSelect.value;
+        const department = departmentSelect ? departmentSelect.value : '';
+        const year = yearSelect.value;
+        const term = termSelect.value;
+        if (!session || !department || !year || !term) {
+            return null;
+        }
+        return state.students.filter((student) => (
+            student.session === session &&
+            student.department === department &&
+            student.year === year &&
+            student.term === term
+        ));
+    };
+
+    const getCoursesFor = (session, year, term, department) => (
+        state.courses.filter((course) => (
+            course.session === session &&
+            course.year === year &&
+            course.term === term &&
+            (department ? resolveDepartment(course.department) === department : true)
+        ))
+    );
+
+    const renderTable = () => {
+        clearTableRows();
+        if (!filtersSubmitted) {
+            showTableMessage(FILTER_PROMPT_MESSAGE);
+            return;
+        }
+
+        const filtered = getFilteredStudents();
+        if (!filtered) {
+            showTableMessage('Please complete all filter fields before applying.');
+            return;
+        }
+        if (!filtered.length) {
+            showTableMessage('No students found for the selected filters.');
+            return;
+        }
+        if (tableEmpty) {
+            tableEmpty.hidden = true;
+        }
+        filtered.forEach((student) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${student.id}</td>
+                <td>${student.name}</td>
+                <td>${student.tgpa.toFixed(2)}</td>
+                <td>${student.cgpa.toFixed(2)}</td>
+                <td>
+                    <button type="button" class="admin-button admin-button--secondary" data-student="${student.id}">
+                        Edit Details
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    };
+
+    const createFormField = (labelText, name, type, placeholder, required) => {
+        const field = document.createElement('div');
+        field.className = 'form-field';
+        const label = document.createElement('label');
+        label.textContent = labelText;
+        label.setAttribute('for', name);
+        const input = document.createElement('input');
+        input.type = type;
+        input.name = name;
+        input.id = name;
+        input.placeholder = placeholder || '';
+        if (required) input.required = true;
+        field.appendChild(label);
+        field.appendChild(input);
+        return field;
+    };
+
+    const createSelectField = (labelText, name, options, placeholder, required) => {
+        const field = document.createElement('div');
+        field.className = 'form-field';
+        const label = document.createElement('label');
+        label.textContent = labelText;
+        label.setAttribute('for', name);
+        const select = document.createElement('select');
+        select.name = name;
+        select.id = name;
+        if (required) select.required = true;
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        defaultOption.textContent = placeholder || 'Select...';
+        select.appendChild(defaultOption);
+        (options || []).forEach((opt) => {
+            const option = document.createElement('option');
+            option.value = opt;
+            option.textContent = opt;
+            select.appendChild(option);
+        });
+        field.appendChild(label);
+        field.appendChild(select);
+        return field;
+    };
+
+    const renderAddStudentView = (feedback) => {
+        const title = 'Add Student';
+        showActionPanel(title, (container) => {
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+            
+            const header = document.createElement('header');
+            const h2 = document.createElement('h2');
+            h2.textContent = title;
+            header.appendChild(h2);
+            card.appendChild(header);
+
+            const form = document.createElement('form');
+            form.id = 'addStudentForm';
+            form.noValidate = true;
+
+            const grid = document.createElement('div');
+            grid.className = 'form-grid';
+
+            const studentIdField = createFormField('Student ID', 'studentId', 'text', '2211040', true);
+            const studentNameField = createFormField('Student Name', 'studentName', 'text', 'Nusrat Jahan', true);
+            const departmentField = createSelectField('Department', 'department', FILTER_DEPARTMENTS, 'Select Department', true);
+            const sessionField = createSelectField('Session', 'session', KNOWN_SESSIONS, 'Select Session', true);
+            const yearField = createSelectField('Year', 'year', KNOWN_YEARS, 'Select year', true);
+            const termField = createSelectField('Term', 'term', KNOWN_TERMS, 'Select term', true);
+
+            grid.append(studentIdField, studentNameField, departmentField, sessionField, yearField, termField);
+
+            const actions = document.createElement('div');
+            actions.className = 'form-actions';
+
+            const saveButton = document.createElement('button');
+            saveButton.type = 'submit';
+            saveButton.className = 'admin-button';
+            saveButton.textContent = 'Save Student';
+
+            const clearButton = document.createElement('button');
+            clearButton.type = 'reset';
+            clearButton.className = 'admin-button admin-button--reset';
+            clearButton.textContent = 'Clear';
+            
+            actions.append(saveButton, clearButton);
+
+            const noteWrapper = document.createElement('div');
+            const note = document.createElement('p');
+            note.className = 'table-note';
+            note.textContent = 'TGPA and CGPA update automatically when you record results.';
+            noteWrapper.appendChild(note);
+            
+            if (feedback) {
+                const message = document.createElement('div');
+                message.className = `action-message action-message--${feedback.type}`;
+                message.textContent = feedback.message;
+                form.appendChild(message);
+            }
+
+            form.append(grid, actions, noteWrapper);
+            card.append(form);
+            container.appendChild(card);
+
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                clearActionMessage(form);
+                const formData = new FormData(form);
+                const student = {
+                    id: formData.get('studentId'),
+                    name: formData.get('studentName'),
+                    department: formData.get('department'),
+                    session: formData.get('session'),
+                    year: formData.get('year'),
+                    term: formData.get('term'),
+                    tgpa: 0,
+                    cgpa: 0,
+                    courses: []
+                };
+
+                if (!student.id || !student.name || !student.department || !student.session || !student.year || !student.term) {
+                    showActionMessage(form, 'Please fill in all required fields.', 'error');
+                    return;
+                }
+
+                const existing = state.students.find((s) => s.id === student.id);
+                if (existing) {
+                    showActionMessage(form, `Student with ID ${student.id} already exists.`, 'error');
+                    return;
+                }
+
+                persistStudents([student, ...state.students]);
+                switchView('add-student', { type: 'success', message: `Student "${student.name}" added successfully.` });
+            });
+            
+            form.addEventListener('reset', () => {
+                 clearActionMessage(form);
+            });
+        });
+    };
+
+    const renderManageStudentsView = (feedback, options = {}) => {
+        if (typeof options.page === 'number') {
+            manageStudentsPage = options.page;
+        }
+
+        showActionPanel('Manage Students', (container) => {
+            if (!state.students.length) {
+                manageStudentsPage = 1;
+                container.innerHTML = `
+                    <div class="table-empty">No students available. Add a student to get started.</div>
+                    <div class="action-message" hidden></div>
+                `;
+                return;
+            }
+
+            const totalStudents = state.students.length;
+            const totalPages = Math.max(1, Math.ceil(totalStudents / PAGE_SIZE));
+            manageStudentsPage = Math.min(Math.max(manageStudentsPage, 1), totalPages);
+            const startIndex = (manageStudentsPage - 1) * PAGE_SIZE;
+            const pageStudents = state.students.slice(startIndex, startIndex + PAGE_SIZE);
+
+            const rows = pageStudents
+                .map((student) => {
+                    const normalize = (value) => {
+                        if (typeof value === 'string') {
+                            return value.trim();
+                        }
+                        if (typeof value === 'number') {
+                            return value.toString();
+                        }
+                        return '';
+                    };
+                    const sessionDisplay = normalize(student.session) || '—';
+                    const yearDisplay = normalize(student.year) || '—';
+                    const termDisplay = normalize(student.term) || '—';
+                    const departmentDisplay = resolveDepartment(student.department) || normalize(student.department) || '—';
+                    return `
+                        <tr>
+                            <td>${student.id}</td>
+                            <td>${student.name}</td>
+                            <td>${departmentDisplay}</td>
+                            <td>${sessionDisplay}</td>
+                            <td>${yearDisplay}, ${termDisplay}</td>
+                            <td>${student.tgpa.toFixed(2)}</td>
+                            <td>${student.cgpa.toFixed(2)}</td>
+                            <td>
+                                <div class="table-actions">
+                                    <button type="button" class="inline-button inline-button--primary" data-edit="${student.id}">Edit</button>
+                                    <button type="button" class="inline-button inline-button--remove" data-remove="${student.id}">Remove</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                })
+                .join('');
+
+            const pagination = `
+                <div class="table-pagination">
+                    <button type="button" class="inline-button inline-button--secondary" data-page-action="prev" ${manageStudentsPage === 1 ? 'disabled' : ''}>Previous</button>
+                    <span class="table-pagination_status">Page ${manageStudentsPage} of ${totalPages}</span>
+                    <button type="button" class="inline-button inline-button--secondary" data-page-action="next" ${manageStudentsPage >= totalPages ? 'disabled' : ''}>Next</button>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Session</th>
+                                <th>Year & Term</th>
+                                <th>TGPA</th>
+                                <th>CGPA</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+                ${pagination}
+                <div class="action-message" hidden></div>
+            `;
+        });
+
+        clearActionMessage(actionPanelBody);
+        if (feedback) {
+            showActionMessage(actionPanelBody, feedback.message, feedback.type);
+        }
+
+        const manageTable = actionPanelBody.querySelector('tbody');
+        if (!manageTable) {
+            return;
+        }
+
+        manageTable.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLButtonElement)) {
+                return;
+            }
+
+            const studentId = target.dataset.remove || target.dataset.edit;
+            if (!studentId) {
+                return;
+            }
+
+            if (target.dataset.remove) {
+                const remaining = state.students.filter((student) => student.id !== studentId);
+                persistStudents(remaining);
+                const totalPages = remaining.length ? Math.ceil(remaining.length / PAGE_SIZE) : 1;
+                manageStudentsPage = Math.min(manageStudentsPage, totalPages);
+                renderManageStudentsView({ message: 'Student removed.', type: 'success' }, { page: manageStudentsPage });
+                return;
+            }
+
+            if (target.dataset.edit) {
+                handleEdit(studentId);
+            }
+        });
+
+        const paginationControls = actionPanelBody.querySelector('.table-pagination');
+        if (paginationControls) {
+            paginationControls.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLButtonElement) || !target.dataset.pageAction) {
+                    return;
+                }
+
+                const totalPages = Math.max(1, Math.ceil(state.students.length / PAGE_SIZE));
+                if (target.dataset.pageAction === 'prev' && manageStudentsPage > 1) {
+                    manageStudentsPage -= 1;
+                    renderManageStudentsView(undefined, { page: manageStudentsPage });
+                }
+                if (target.dataset.pageAction === 'next' && manageStudentsPage < totalPages) {
+                    manageStudentsPage += 1;
+                    renderManageStudentsView(undefined, { page: manageStudentsPage });
+                }
+            });
+        }
+    };
+
+    const renderManageCoursesView = (feedback, defaults = {}) => {
+        showActionPanel('Add Courses', (container) => {
+            container.innerHTML = `
+                <section class="course-meta">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="courseDepartment">Department</label>
+                            <select id="courseDepartment" required>
+                                <option value="" selected disabled>Select department</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="courseYear">Year</label>
+                            <select id="courseYear" required>
+                                <option value="" selected disabled>Select year</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="courseTerm">Term</label>
+                            <select id="courseTerm" required>
+                                <option value="" selected disabled>Select term</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+                <section class="course-batch">
+                    <header>
+                        <h3>Course Entries</h3>
+                        <p class="table-note">Add multiple courses for the selected department at once.</p>
+                    </header>
+                    <form id="courseForm">
+                        <div id="courseEntries" class="course-entries"></div>
+                        <div class="course-entry-actions">
+                            <button type="button" class="inline-button inline-button--primary" id="courseAddRow">Add another course</button>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="admin-button">Save Courses</button>
+                            <button type="button" class="admin-button admin-button--reset" id="courseReset">Clear</button>
+                        </div>
+                    </form>
+                </section>
+                <section class="course-preview">
+                    <header>
+                        <h3>Saved Courses For Selection</h3>
+                        <p class="table-note">Pick department, year, and term to review or remove existing courses.</p>
+                    </header>
+                    <div id="coursePreview"></div>
+                </section>
+                <div class="action-message" hidden></div>
+            `;
+        });
+
+        const form = actionPanelBody.querySelector('#courseForm');
+        const entriesContainer = actionPanelBody.querySelector('#courseEntries');
+        const addRowButton = actionPanelBody.querySelector('#courseAddRow');
+        const previewWrapper = actionPanelBody.querySelector('#coursePreview');
+        const resetButton = actionPanelBody.querySelector('#courseReset');
+        const departmentSelectField = actionPanelBody.querySelector('#courseDepartment');
+        const yearSelectField = actionPanelBody.querySelector('#courseYear');
+        const termSelectField = actionPanelBody.querySelector('#courseTerm');
+
+        const ensureSelectValue = (selectElement, value) => {
+            if (!selectElement || !value) {
+                return;
+            }
+            const options = Array.from(selectElement.options);
+            if (!options.some((option) => option.value === value)) {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                selectElement.appendChild(option);
+            }
+            selectElement.value = value;
+        };
+
+        const populateCourseMetaSelects = () => {
+            if (departmentSelectField) {
+                populateSelect(departmentSelectField, FILTER_DEPARTMENTS, 'Select department');
+            }
+            if (yearSelectField) {
+                populateSelect(yearSelectField, KNOWN_YEARS, 'Select year');
+            }
+            if (termSelectField) {
+                populateSelect(termSelectField, KNOWN_TERMS, 'Select term');
+            }
+        };
+
+        const applyDefaults = () => {
+            if (defaults.department) {
+                const resolvedDepartment = resolveDepartment(defaults.department) || normalizeText(defaults.department);
+                if (resolvedDepartment) {
+                    ensureSelectValue(departmentSelectField, resolvedDepartment);
+                }
+            }
+            if (defaults.year) {
+                ensureSelectValue(yearSelectField, defaults.year);
+            }
+            if (defaults.term) {
+                ensureSelectValue(termSelectField, defaults.term);
+            }
+        };
+
+        const renderCoursePreview = () => {
+            if (!previewWrapper) {
+                return;
+            }
+            previewWrapper.innerHTML = '';
+            const departmentValue = departmentSelectField ? resolveDepartment(departmentSelectField.value) : '';
+            const yearValue = yearSelectField ? yearSelectField.value : '';
+            const termValue = termSelectField ? termSelectField.value : '';
+            if (!departmentValue || !yearValue || !termValue) {
+                previewWrapper.innerHTML = '<div class="table-empty">Select department, year, and term to view courses.</div>';
+                return;
+            }
+            const courses = getCoursesFor('', yearValue, termValue, departmentValue);
+            if (!courses.length) {
+                previewWrapper.innerHTML = '<div class="table-empty">No courses saved for this selection yet.</div>';
+                return;
+            }
+            const table = document.createElement('table');
+            table.className = 'admin-table';
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Department</th>
+                        <th>Credits</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${courses.map((course, index) => `
+                        <tr>
+                            <td>${course.code}</td>
+                            <td>${course.name}</td>
+                            <td>${course.department || '-'}</td>
+                            <td>${course.credits}</td>
+                            <td>
+                                <button type="button" class="inline-button inline-button--remove" data-remove-course="${index}">Remove</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            previewWrapper.appendChild(table);
+        };
+
+        const createCourseRow = (defaultsRow = {}) => {
+            const row = document.createElement('div');
+            row.className = 'course-entry';
+            row.dataset.courseRow = 'true';
+            row.innerHTML = `
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Course Code</label>
+                        <input type="text" placeholder="CSTE2201" required data-course-code>
+                    </div>
+                    <div class="form-field">
+                        <label>Course Name</label>
+                        <input type="text" placeholder="Data Structures" required data-course-name>
+                    </div>
+                    <div class="form-field">
+                        <label>Credits</label>
+                        <input type="number" min="0" step="0.5" placeholder="3" required data-course-credits>
+                    </div>
+                </div>
+                <div class="course-entry-actions">
+                    <button type="button" class="inline-button inline-button--remove" data-remove-row>Remove</button>
+                </div>
+            `;
+            const codeField = row.querySelector('[data-course-code]');
+            const nameField = row.querySelector('[data-course-name]');
+            const creditsField = row.querySelector('[data-course-credits]');
+            const removeButton = row.querySelector('[data-remove-row]');
+
+            if (codeField && typeof defaultsRow.code === 'string') {
+                codeField.value = defaultsRow.code;
+            }
+            if (nameField && typeof defaultsRow.name === 'string') {
+                nameField.value = defaultsRow.name;
+            }
+            if (creditsField && defaultsRow.credits !== undefined) {
+                creditsField.value = defaultsRow.credits;
+            }
+
+            if (removeButton) {
+                removeButton.addEventListener('click', () => {
+                    if (entriesContainer.childElementCount <= 1) {
+                        [codeField, nameField, creditsField].forEach((input) => {
+                            if (input) {
+                                input.value = '';
+                            }
+                        });
+                        return;
+                    }
+                    row.remove();
+                });
+            }
+
+            entriesContainer.appendChild(row);
+            return row;
+        };
+
+        const ensureInitialRow = () => {
+            if (!entriesContainer) {
+                return;
+            }
+            if (!entriesContainer.childElementCount) {
+                createCourseRow();
+            }
+        };
+
+        const resetForm = () => {
+            clearActionMessage(actionPanelBody);
+            populateCourseMetaSelects();
+            if (departmentSelectField) {
+                departmentSelectField.value = '';
+            }
+            if (yearSelectField) {
+                yearSelectField.value = '';
+            }
+            if (termSelectField) {
+                termSelectField.value = '';
+            }
+            if (entriesContainer) {
+                entriesContainer.innerHTML = '';
+            }
+            ensureInitialRow();
+            renderCoursePreview();
+        };
+
+        clearActionMessage(actionPanelBody);
+        if (feedback) {
+            showActionMessage(actionPanelBody, feedback.message, feedback.type);
+        }
+
+        if (!form || !entriesContainer || !addRowButton || !departmentSelectField || !yearSelectField || !termSelectField) {
+            return;
+        }
+
+        populateCourseMetaSelects();
+        applyDefaults();
+        ensureInitialRow();
+        renderCoursePreview();
+
+        const handleSelectionChange = () => {
+            clearActionMessage(actionPanelBody);
+            renderCoursePreview();
+        };
+
+        departmentSelectField.addEventListener('change', handleSelectionChange);
+        yearSelectField.addEventListener('change', handleSelectionChange);
+        termSelectField.addEventListener('change', handleSelectionChange);
+
+        addRowButton.addEventListener('click', () => {
+            const newRow = createCourseRow();
+            const firstInput = newRow.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+
+        if (resetButton) {
+            resetButton.addEventListener('click', () => {
+                resetForm();
+            });
+        }
+
+        if (previewWrapper) {
+            previewWrapper.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLButtonElement) || !target.dataset.removeCourse) {
+                    return;
+                }
+
+                const departmentValue = resolveDepartment(departmentSelectField.value);
+                const yearValue = yearSelectField.value;
+                const termValue = termSelectField.value;
+                const index = Number.parseInt(target.dataset.removeCourse, 10);
+                if (!departmentValue || !yearValue || !termValue) {
+                    showActionMessage(actionPanelBody, 'Select a valid department, year, and term before removing courses.', 'error');
+                    return;
+                }
+                const courses = getCoursesFor('', yearValue, termValue, departmentValue);
+                if (Number.isNaN(index) || !courses[index]) {
+                    showActionMessage(actionPanelBody, 'Course not found.', 'error');
+                    return;
+                }
+
+                const remaining = state.courses.filter((course) => !(
+                    resolveDepartment(course.department) === departmentValue &&
+                    course.year === yearValue &&
+                    course.term === termValue &&
+                    course.code === courses[index].code
+                ));
+                persistCourses(remaining);
+                renderManageCoursesView({ message: 'Course removed.', type: 'success' }, { department: departmentValue, year: yearValue, term: termValue });
+            });
+        }
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            clearActionMessage(actionPanelBody);
+
+            const departmentValue = resolveDepartment(departmentSelectField.value);
+            const yearValue = yearSelectField.value;
+            const termValue = termSelectField.value;
+
+            if (!departmentValue || !yearValue || !termValue) {
+                showActionMessage(actionPanelBody, 'Select a valid department, year, and term before saving courses.', 'error');
+                return;
+            }
+
+            const rows = Array.from(entriesContainer.querySelectorAll('[data-course-row]'));
+            if (!rows.length) {
+                showActionMessage(actionPanelBody, 'Add at least one course entry.', 'error');
+                return;
+            }
+
+            const existing = getCoursesFor('', yearValue, termValue, departmentValue);
+            const existingCodes = new Set(existing.map((course) => course.code.toLowerCase()));
+            const seenCodes = new Set();
+            const newCourses = [];
+
+            for (const row of rows) {
+                const codeField = row.querySelector('[data-course-code]');
+                const nameField = row.querySelector('[data-course-name]');
+                const creditsField = row.querySelector('[data-course-credits]');
+                const codeValue = codeField ? codeField.value.trim() : '';
+                const nameValue = nameField ? nameField.value.trim() : '';
+                const creditsValue = creditsField ? Number.parseFloat(creditsField.value) : Number.NaN;
+
+                if (!codeValue || !nameValue) {
+                    showActionMessage(actionPanelBody, 'Please fill course code and name for every entry.', 'error');
+                    return;
+                }
+
+                if (Number.isNaN(creditsValue) || creditsValue <= 0) {
+                    showActionMessage(actionPanelBody, 'Credits must be greater than zero for every course.', 'error');
+                    return;
+                }
+
+                const normalizedCode = codeValue.toLowerCase();
+                if (seenCodes.has(normalizedCode)) {
+                    showActionMessage(actionPanelBody, 'Duplicate course codes found in the list. Use unique codes.', 'error');
+                    return;
+                }
+
+                if (existingCodes.has(normalizedCode)) {
+                    showActionMessage(actionPanelBody, `Course code ${codeValue} already exists for the selected term.`, 'error');
+                    return;
+                }
+
+                seenCodes.add(normalizedCode);
+                existingCodes.add(normalizedCode);
+
+                newCourses.push({
+                    department: departmentValue,
+                    year: yearValue,
+                    term: termValue,
+                    code: codeValue,
+                    name: nameValue,
+                    credits: Number(creditsValue.toFixed(2))
+                });
+            }
+
+            if (!newCourses.length) {
+                showActionMessage(actionPanelBody, 'Add at least one valid course entry.', 'error');
+                return;
+            }
+
+            persistCourses([...state.courses, ...newCourses]);
+            const successMessage = newCourses.length === 1 ? 'Course saved successfully.' : `${newCourses.length} courses saved successfully.`;
+            renderManageCoursesView({ message: successMessage, type: 'success' }, {
+                department: departmentValue,
+                year: yearValue,
+                term: termValue
+            });
+        });
+    };
+
+    const renderCoursesView = (feedback) => {
+        showActionPanel('Courses', (container) => {
+            const overviewSection = document.getElementById('resultOverview');
+            if (overviewSection) {
+                overviewSection.hidden = true; // Hide Search Information form in Course option
+            }
+
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+
+            // Search Course form
+            const filterSection = document.createElement('div');
+            filterSection.innerHTML = `
+                <h3 style="font-size: 18px; font-weight: 700; color: #182655; margin-bottom: 16px;">Search Course</h3>
+                <form class="filter-form" id="courseFilterForm">
+                    <div class="filter-field">
+                        <label for="courseFilterDepartment">Department</label>
+                        <select id="courseFilterDepartment">
+                            <option value="" selected>All Departments</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="courseFilterYear">Year</label>
+                        <select id="courseFilterYear">
+                            <option value="" selected>All Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="courseFilterTerm">Term</label>
+                        <select id="courseFilterTerm">
+                            <option value="" selected>All Terms</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit" class="admin-button admin-button--apply">Search</button>
+                        <button type="button" class="admin-button admin-button--reset" id="courseFilterReset">Reset</button>
+                    </div>
+                </form>
+            `;
+            card.appendChild(filterSection);
+
+            const tableSection = document.createElement('div');
+            tableSection.style.marginTop = '24px';
+            tableSection.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Term</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="courseResultsTable"></tbody>
+                    </table>
+                    <div class="table-empty" id="courseResultsEmpty">Please select Department, Year and Term to view courses.</div>
+                </div>
+            `;
+            card.appendChild(tableSection);
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'action-message';
+            messageDiv.hidden = true;
+            card.appendChild(messageDiv);
+
+            container.appendChild(card);
+        });
+
+        const filterForm = actionPanelBody.querySelector('#courseFilterForm');
+        const departmentFilter = actionPanelBody.querySelector('#courseFilterDepartment');
+        const yearFilter = actionPanelBody.querySelector('#courseFilterYear');
+        const termFilter = actionPanelBody.querySelector('#courseFilterTerm');
+        const resetBtn = actionPanelBody.querySelector('#courseFilterReset');
+        const resultsTable = actionPanelBody.querySelector('#courseResultsTable');
+        const emptyMessage = actionPanelBody.querySelector('#courseResultsEmpty');
+
+        populateSelect(departmentFilter, FILTER_DEPARTMENTS, 'All Departments');
+        departmentFilter.insertBefore(document.createElement('option'), departmentFilter.firstChild).value = '';
+        departmentFilter.firstChild.textContent = 'All Departments';
+
+        populateSelect(yearFilter, KNOWN_YEARS, 'All Years');
+        yearFilter.insertBefore(document.createElement('option'), yearFilter.firstChild).value = '';
+        yearFilter.firstChild.textContent = 'All Years';
+
+        populateSelect(termFilter, KNOWN_TERMS, 'All Terms');
+        termFilter.insertBefore(document.createElement('option'), termFilter.firstChild).value = '';
+        termFilter.firstChild.textContent = 'All Terms';
+
+        const renderCourseResults = () => {
+            resultsTable.innerHTML = '';
+            const department = departmentFilter.value;
+            const year = yearFilter.value;
+            const term = termFilter.value;
+
+            let filtered = state.courses.filter(course => {
+                if (department && resolveDepartment(course.department) !== department) return false;
+                if (year && course.year !== year) return false;
+                if (term && course.term !== term) return false;
+                return true;
+            });
+
+            if (!filtered.length) {
+                emptyMessage.hidden = false;
+                emptyMessage.textContent = 'No courses found for the selected criteria.';
+                return;
+            }
+
+            emptyMessage.hidden = true;
+            filtered.forEach(course => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${course.year}</td>
+                    <td>${course.term}</td>
+                    <td>
+                        <button class="inline-button inline-button--primary" data-action="edit" data-year="${course.year}" data-term="${course.term}" data-department="${course.department}">Edit</button>
+                        <button class="inline-button inline-button--danger" data-action="delete" data-year="${course.year}" data-term="${course.term}" data-department="${course.department}">Delete</button>
+                    </td>
+                `;
+                resultsTable.appendChild(row);
+            });
+        };
+
+        filterForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            renderCourseResults();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            departmentFilter.value = '';
+            yearFilter.value = '';
+            termFilter.value = '';
+            resultsTable.innerHTML = '';
+            emptyMessage.hidden = false;
+            emptyMessage.textContent = 'Please select Department, Year and Term to view courses.';
+        });
+
+        resultsTable.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.dataset.action === 'edit') {
+                const year = target.dataset.year;
+                const term = target.dataset.term;
+                const department = target.dataset.department;
+
+                renderEditCoursePage(department, year, term);
+            }
+
+            if (target.dataset.action === 'delete') {
+                if (!confirm('Are you sure you want to delete this course?')) return;
+
+                const year = target.dataset.year;
+                const term = target.dataset.term;
+                const department = target.dataset.department;
+
+                state.courses = state.courses.filter(course => 
+                    !(course.year === year && course.term === term && course.department === department)
+                );
+
+                showActionMessage(actionPanelBody, 'Course deleted successfully!', 'success');
+                renderCourseResults();
+            }
+        });
+    };
+
+    const renderEditCoursePage = (department, year, term) => {
+        showActionPanel(`Department: ${department}, Year: ${year}, Term: ${term}`, (container) => {
+            const card = document.createElement('div');
+            card.className = 'admin-card';
+
+            const header = document.createElement('h3');
+            header.textContent = `Department: ${department}, Year: ${year}, Term: ${term}`;
+            header.style.marginBottom = '16px';
+            card.appendChild(header);
+
+            const tableSection = document.createElement('div');
+            tableSection.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Title</th>
+                                <th>Credits</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editCourseTable"></tbody>
+                    </table>
+                </div>
+            `;
+            card.appendChild(tableSection);
+
+            const buttonSection = document.createElement('div');
+            buttonSection.style.marginTop = '16px';
+            buttonSection.innerHTML = `
+                <button class="admin-button admin-button--primary" id="addCourseButton">Add Course</button>
+                <button class="admin-button admin-button--danger" id="cancelButton">Cancel</button>
+                <button class="admin-button admin-button--success" id="saveChangesButton">Save Changes</button>
+            `;
+            card.appendChild(buttonSection);
+
+            container.appendChild(card);
+
+            const editCourseTable = actionPanelBody.querySelector('#editCourseTable');
+            const addCourseButton = actionPanelBody.querySelector('#addCourseButton');
+            const cancelButton = actionPanelBody.querySelector('#cancelButton');
+            const saveChangesButton = actionPanelBody.querySelector('#saveChangesButton');
+
+            const filteredCourses = state.courses.filter(course => 
+                course.department === department && course.year === year && course.term === term
+            );
+
+            editCourseTable.innerHTML = '';
+            filteredCourses.forEach(course => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${course.code}</td>
+                    <td>${course.name}</td>
+                    <td>${course.credits}</td>
+                    <td>
+                        <button class="inline-button inline-button--danger" data-action="remove" data-code="${course.code}">Remove</button>
+                    </td>
+                `;
+                editCourseTable.appendChild(row);
+            });
+
+            editCourseTable.addEventListener('click', (event) => {
+                const target = event.target;
+                if (target.dataset.action === 'remove') {
+                    const code = target.dataset.code;
+                    state.courses = state.courses.filter(course => course.code !== code);
+                    renderEditCoursePage(department, year, term);
+                }
+            });
+
+            addCourseButton.addEventListener('click', () => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td><input type="text" placeholder="Course Code"></td>
+                    <td><input type="text" placeholder="Course Title"></td>
+                    <td><input type="number" placeholder="Credits" min="0" step="0.5"></td>
+                    <td>
+                        <button class="inline-button inline-button--danger" data-action="remove">Remove</button>
+                    </td>
+                `;
+                editCourseTable.appendChild(newRow);
+            });
+
+            cancelButton.addEventListener('click', () => {
+                switchView('courses');
+            });
+
+            saveChangesButton.addEventListener('click', () => {
+                const rows = Array.from(editCourseTable.querySelectorAll('tr'));
+                const updatedCourses = rows.map(row => {
+                    const code = row.querySelector('input[placeholder="Course Code"]').value;
+                    const name = row.querySelector('input[placeholder="Course Title"]').value;
+                    const credits = row.querySelector('input[placeholder="Credits"]').value;
+
+                    return { department, year, term, code, name, credits: parseFloat(credits) };
+                });
+
+                state.courses = state.courses.filter(course => 
+                    !(course.department === department && course.year === year && course.term === term)
+                ).concat(updatedCourses);
+
+                showActionMessage(actionPanelBody, 'Changes saved successfully!', 'success');
+                switchView('courses');
+            });
+        });
+    };
+
+    const renderManageResultsView = (feedback, options = {}) => {
+        if (typeof options.page === 'number') {
+            manageResultsPage = options.page;
+        }
+
+        showActionPanel('Manage Results', (container) => {
+            const entries = [];
+            state.students.forEach((student) => {
+                (student.courses || []).forEach((course, index) => {
+                    entries.push({
+                        studentId: student.id,
+                        studentName: student.name,
+                        courseIndex: index,
+                        course
+                    });
+                });
+            });
+
+            if (!entries.length) {
+                manageResultsPage = 1;
+                container.innerHTML = `
+                    <div class="table-empty">No course results recorded yet.</div>
+                    <div class="action-message" hidden></div>
+                `;
+                return;
+            }
+
+            const totalEntries = entries.length;
+            const totalPages = Math.max(1, Math.ceil(totalEntries / PAGE_SIZE));
+            manageResultsPage = Math.min(Math.max(manageResultsPage, 1), totalPages);
+            const startIndex = (manageResultsPage - 1) * PAGE_SIZE;
+            const pageEntries = entries.slice(startIndex, startIndex + PAGE_SIZE);
+
+            const rows = pageEntries
+                .map((entry) => `
+                    <tr>
+                        <td>${entry.studentId}</td>
+                        <td>${entry.studentName}</td>
+                        <td>${entry.course.code}</td>
+                        <td>${entry.course.name}</td>
+                        <td>${entry.course.credits}</td>
+                        <td>${entry.course.gpa}</td>
+                        <td>${entry.course.grade}</td>
+                        <td>
+                            <button type="button" class="inline-button inline-button--remove" data-student="${entry.studentId}" data-index="${entry.courseIndex}">Remove</button>
+                        </td>
+                    </tr>
+                `)
+                .join('');
+
+            const pagination = `
+                <div class="table-pagination">
+                    <button type="button" class="inline-button inline-button--secondary" data-page-action="prev" ${manageResultsPage === 1 ? 'disabled' : ''}>Previous</button>
+                    <span class="table-pagination_status">Page ${manageResultsPage} of ${totalPages}</span>
+                    <button type="button" class="inline-button inline-button--secondary" data-page-action="next" ${manageResultsPage >= totalPages ? 'disabled' : ''}>Next</button>
+                </div>
+            `;
+
+            container.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Credits</th>
+                                <th>GPA</th>
+                                <th>Grade</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+                ${pagination}
+                <div class="action-message" hidden></div>
+            `;
+        });
+
+        clearActionMessage(actionPanelBody);
+        if (feedback) {
+            showActionMessage(actionPanelBody, feedback.message, feedback.type);
+        }
+
+        const resultsTable = actionPanelBody.querySelector('tbody');
+        if (resultsTable) {
+            resultsTable.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLButtonElement) || !target.dataset.student) {
+                return;
+            }
+
+            const studentId = target.dataset.student;
+            const courseIndex = Number.parseInt(target.dataset.index, 10);
+            if (Number.isNaN(courseIndex)) {
+                return;
+            }
+
+            const targetStudent = state.students.find((student) => student.id === studentId);
+            if (!targetStudent) {
+                showActionMessage(actionPanelBody, 'Student not found.', 'error');
+                return;
+            }
+
+            const newCourses = [...(targetStudent.courses || [])];
+            newCourses.splice(courseIndex, 1);
+
+            const metrics = computeStudentMetrics(newCourses);
+            const updatedStudent = {
+                ...targetStudent,
+                courses: newCourses,
+                tgpa: metrics.tgpa,
+                cgpa: metrics.cgpa
+            };
+
+            const updatedStudents = state.students.map((student) => (
+                student.id === updatedStudent.id ? updatedStudent : student
+            ));
+
+            persistStudents(updatedStudents);
+            const remainingEntries = updatedStudents.reduce((count, student) => count + ((student.courses || []).length), 0);
+            const totalPages = remainingEntries ? Math.ceil(remainingEntries / PAGE_SIZE) : 1;
+            manageResultsPage = Math.min(manageResultsPage, totalPages);
+            renderManageResultsView({ message: 'Course removed from results.', type: 'success' }, { page: manageResultsPage });
+        });
+        }
+
+        const paginationControls = actionPanelBody.querySelector('.table-pagination');
+        if (paginationControls) {
+            paginationControls.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof HTMLButtonElement) || !target.dataset.pageAction) {
+                    return;
+                }
+
+                const totalPages = Math.max(1, Math.ceil(state.students.reduce((count, student) => count + ((student.courses || []).length), 0) / PAGE_SIZE));
+                if (target.dataset.pageAction === 'prev' && manageResultsPage > 1) {
+                    manageResultsPage -= 1;
+                    renderManageResultsView(undefined, { page: manageResultsPage });
+                }
+                if (target.dataset.pageAction === 'next' && manageResultsPage < totalPages) {
+                    manageResultsPage += 1;
+                    renderManageResultsView(undefined, { page: manageResultsPage });
+                }
+            });
+        }
+    };
+
+    const switchView = (view, feedback) => {
+        setActiveLink(view);
+        if (root) {
+            root.dataset.view = view;
+        }
+        if (view === 'dashboard') {
+            showDashboardSections();
+            return;
+        }
+
+        const viewMap = {
+            dashboard: renderStats,
+            courses: renderCoursesView,
+            'add-student': renderAddStudentView,
+            'manage-students': renderManageStudentsView,
+            'manage-courses': renderManageCoursesView,
+            'manage-results': renderManageResultsView
+        };
+
+        const renderer = viewMap[view];
+        if (renderer) {
+            renderer(feedback);
+        }
+    };
+
+    const handleEdit = (studentId) => {
+        const snapshot = createStateSnapshot();
+        const params = new URLSearchParams();
+        params.set('studentId', studentId);
+        const encodedState = encodeStateForQuery(snapshot);
+        if (encodedState) {
+            params.set('state', encodedState);
+        }
+        window.location.href = `admin-student-details.html?${params.toString()}`;
+    };
+
+    const handleFilterChange = () => {
+        filtersSubmitted = false;
+        clearTableRows();
+        showTableMessage(FILTER_PROMPT_MESSAGE);
+    };
+
+    if (sessionSelect) {
+        sessionSelect.addEventListener('change', handleFilterChange);
+    }
+    if (departmentSelect) {
+        departmentSelect.addEventListener('change', handleFilterChange);
+    }
+    if (yearSelect) {
+        yearSelect.addEventListener('change', handleFilterChange);
+    }
+    if (termSelect) {
+        termSelect.addEventListener('change', handleFilterChange);
+    }
+
+    if (filterForm) {
+        filterForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            filtersSubmitted = true;
+            renderTable();
+        });
+    }
+
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            renderFilters();
+            showTableMessage(FILTER_PROMPT_MESSAGE);
+        });
+    }
+
+    tableBody.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLButtonElement && target.dataset.student) {
+            handleEdit(target.dataset.student);
+        }
+    });
+
+    if (recentStudentsViewAll) {
+        recentStudentsViewAll.addEventListener('click', (event) => {
+            event.preventDefault();
+            switchView('manage-students');
+        });
+    }
+
+    if (recentResultsViewAll) {
+        recentResultsViewAll.addEventListener('click', (event) => {
+            event.preventDefault();
+            switchView('manage-results');
+        });
+    }
+
+    navLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const view = link.dataset.view;
+            if (!view) {
+                return;
+            }
+            switchView(view);
+        });
+    });
+
+    if (homeButton) {
+        homeButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = 'Homepage.html';
+        });
+    }
+
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = 'Homepage.html';
+        });
+    }
+
+    renderFilters();
+    renderStats();
+    renderRecentStudents();
+    renderRecentResults();
+    switchView('dashboard');
+})();
+</script>
+</body>
+</html>

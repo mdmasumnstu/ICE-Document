@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Academic Result</title>
+
+<style>
+    body{
+        font-family: "Times New Roman", serif;
+        background: whitesmoke;
+        padding:40px;
+    }
+
+    .result-sheet{
+        width:700px;
+        margin:auto;
+        background: #F0E7AC;
+        border:2px solid #000;
+        padding:25px;
+    }
+
+    .resultheading{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:16px;
+        text-align:center;
+        font-size:32px;
+        font-weight:bold;
+        margin-bottom:20px;
+    }
+    .resultheading img{
+        width:72px;
+        height:auto;
+        border-radius: 35px;
+    }
+    .title{
+        text-align:center;
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:20px;
+        text-decoration:underline;
+    }
+
+    .info{
+        display:grid;
+        grid-template-columns:200px auto;
+        row-gap:8px;
+        margin-bottom:25px;
+        font-size:20px;
+        font-weight: 500;
+    }
+
+    .exam-title{
+        text-align:center;
+        font-weight:bold;
+        font-size:22px;
+        margin:20px 0 10px;
+    }
+
+    table{
+        width:100%;
+        border-collapse:collapse;
+        font-size:15px;
+    }
+
+    table th, table td{
+        border:1px solid #000;
+        padding:8px;
+        font-size: x-large;
+        text-align:center;
+        height:35px;
+    }
+
+    table th{
+        font-weight:bold;
+    }
+
+    .bottom{
+        display:flex;
+        justify-content:space-between;
+        margin-top:25px;
+        font-size:18px;
+    }
+
+    .bottom div{
+        width:45%;
+    }
+
+    .right p{
+        margin:6px 0;
+    }
+
+    .no-result{
+        width:850px;
+        margin:30px auto;
+        text-align:center;
+        font-size:18px;
+    }
+
+    .no-result a{
+        color:#000;
+        text-decoration:underline;
+    }
+</style>
+</head>
+
+<body>
+
+ <div class="result-sheet">
+ <div class="resultheading"><img src="nstu logo.webp" alt="NSTU Logo"><span>Noakhali Science and Technology University</span></div>
+    <div class="title">Academic Result</div>
+
+    <div class="info">
+        <div>Student Name :</div><div id="studentName">N/A</div>
+        <div>Student ID :</div><div id="studentId">N/A</div>
+        <div>Session :</div><div id="studentSession">N/A</div>
+        <div>Department :</div><div id="studentDepartment">N/A</div>
+    </div>
+
+    <div class="exam-title" id="examTitle">Examination Result</div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credits</th>
+                <th>GP</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody id="courseTableBody"></tbody>
+    </table>
+
+    <div class="bottom">
+        <div class="left">
+            <p><b>Credit Completed :</b> <span id="totalCredits">0.00</span></p>
+        </div>
+
+        <div class="right">
+            <p><b>TGPA :</b> <span id="tgpaValue">0.00</span></p>
+            <p><b>CGPA :</b> <span id="cgpaValue">0.00</span></p>
+        </div>
+    </div>
+
+</div>
+
+<div class="no-result" id="noResultMessage" hidden>
+    <p>Result data is not available. Please search for your result again.</p>
+    <p><a href="/Homepage.html">Return to Result Search</a></p>
+</div>
+
+<script>
+(function () {
+    const RESULT_VIEW_KEY = 'result:lastView';
+
+    const sheet = document.querySelector('.result-sheet');
+    const noResultMessage = document.getElementById('noResultMessage');
+    const nameField = document.getElementById('studentName');
+    const idField = document.getElementById('studentId');
+    const sessionField = document.getElementById('studentSession');
+    const departmentField = document.getElementById('studentDepartment');
+    const examTitleField = document.getElementById('examTitle');
+    const courseTableBody = document.getElementById('courseTableBody');
+    const totalCreditsField = document.getElementById('totalCredits');
+    const tgpaField = document.getElementById('tgpaValue');
+    const cgpaField = document.getElementById('cgpaValue');
+
+    const formatNumber = (value) => {
+        const numeric = Number(value);
+        return Number.isFinite(numeric) ? numeric.toFixed(2) : '0.00';
+    };
+
+    const formatYear = (value) => {
+        if (typeof value !== 'string' || !value.trim()) {
+            return '';
+        }
+        const trimmed = value.trim();
+        if (trimmed.toUpperCase().startsWith('Y-')) {
+            return `Year ${trimmed.slice(2)}`;
+        }
+        return trimmed;
+    };
+
+    const formatTerm = (value) => {
+        if (typeof value !== 'string' || !value.trim()) {
+            return '';
+        }
+        const trimmed = value.trim();
+        if (trimmed.toUpperCase().startsWith('T')) {
+            return `Term ${trimmed.slice(1)}`;
+        }
+        return trimmed;
+    };
+
+    const dataRaw = window.localStorage.getItem(RESULT_VIEW_KEY);
+    if (!dataRaw) {
+        sheet.hidden = true;
+        noResultMessage.hidden = false;
+        return;
+    }
+
+    let parsed;
+    try {
+        parsed = JSON.parse(dataRaw);
+    } catch (error) {
+        sheet.hidden = true;
+        noResultMessage.hidden = false;
+        return;
+    }
+
+    if (!parsed || typeof parsed !== 'object') {
+        sheet.hidden = true;
+        noResultMessage.hidden = false;
+        return;
+    }
+
+    const courses = Array.isArray(parsed.courses) ? parsed.courses : [];
+
+    nameField.textContent = parsed.name || 'N/A';
+    idField.textContent = parsed.id || 'N/A';
+    sessionField.textContent = parsed.session || 'N/A';
+    departmentField.textContent = parsed.department || 'N/A';
+
+    const yearLabel = formatYear(parsed.year);
+    const termLabel = formatTerm(parsed.term);
+    const titleParts = [];
+    if (yearLabel) {
+        titleParts.push(yearLabel);
+    }
+    if (termLabel) {
+        titleParts.push(termLabel);
+    }
+    examTitleField.textContent = titleParts.length ? `${titleParts.join(' ')} Examination` : 'Examination Result';
+
+    courseTableBody.innerHTML = '';
+    if (!courses.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 5;
+        cell.textContent = 'No course records available for the selected term.';
+        row.appendChild(cell);
+        courseTableBody.appendChild(row);
+    } else {
+        courses.forEach((course) => {
+            const row = document.createElement('tr');
+            const codeCell = document.createElement('td');
+            codeCell.textContent = course.code || '-';
+            const nameCell = document.createElement('td');
+            nameCell.textContent = course.name || '-';
+            const creditsCell = document.createElement('td');
+            creditsCell.textContent = formatNumber(course.credits);
+            const gpaCell = document.createElement('td');
+            gpaCell.textContent = formatNumber(course.gpa);
+            const gradeCell = document.createElement('td');
+            gradeCell.textContent = course.grade || '-';
+            row.append(codeCell, nameCell, creditsCell, gpaCell, gradeCell);
+            courseTableBody.appendChild(row);
+        });
+    }
+
+    const totalCredits = courses.reduce((acc, course) => acc + (Number(course.credits) || 0), 0);
+    totalCreditsField.textContent = formatNumber(totalCredits);
+    tgpaField.textContent = formatNumber(parsed.tgpa);
+    cgpaField.textContent = formatNumber(parsed.cgpa);
+})();
+</script>
+
+</body>
+</html>

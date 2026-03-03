@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body{
+      height: 100vh;
+      background: linear-gradient(135deg, #1673ff, #0b3fa8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box{
+      background: #fff;
+      width: 100%;
+      max-width: 380px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+
+    .login-box h2{
+      text-align: center;
+      margin-bottom: 10px;
+      color: #1673ff;
+    }
+
+    .login-box p{
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .form-group{
+      margin-bottom: 18px;
+    }
+
+    .form-group label{
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .form-group input{
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .form-group input:focus{
+      border-color: #1673ff;
+    }
+
+    .login-btn{
+      width: 100%;
+      padding: 11px;
+      background: #1673ff;
+      border: none;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-btn:hover{
+      background: #0b56d0;
+    }
+
+    .extra{
+      text-align: center;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .extra a{
+      color: #1673ff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <p>Result Management System</p>
+
+    <form>
+      <div class="form-group">
+        <label>Admin Registered Email</label>
+        <input type="email" placeholder="Enter email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Enter password" required>
+      </div>
+
+      <button class="login-btn" type="submit">Login</button>
+    </form>
+
+    <div class="extra">
+      <a href="#">Forgot Password?</a>
+    </div>
+  </div>
+
+</body>
+</html>

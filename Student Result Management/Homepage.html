@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>University Students Result Management System</title>
+    <link rel="stylesheet" href="Header.css">
+    <link rel="stylesheet" href="Homepage.css">
+</head>
+<body>
+
+
+<!--Navigation Bar ekhane theke shoro-->
+<div>
+<header class="navbar">
+    <div class="container">
+        <div class="logo">
+            <a href="#" class="brand-link">
+                <img src="nstu logo.webp" alt="University Logo">
+                <span class="brand-name">Noakhali Science and Technology University</span>
+            </a>
+        </div>
+
+        <nav class="menu">
+            <a href="/Homepage.html">Home</a>
+            <a href="#" class="js-result-open">Result</a>
+            <a href="#" class="js-contact-open">Contact</a>
+            <a href="#" class="js-admin-open">Admin</a>
+        </nav>
+    </div>
+</header>
+</div>
+<!--Navigation Bar ekhane theke sesh-->
+
+
+<!--Hero Section ekhane theke shoro-->
+<div>
+<section class="hero">
+    <div class="hero-slider">
+        <div class="hero-slide is-active" style="background-image: url('nstu image.webp');"></div>
+        <div class="hero-slide" style="background-image: url('nstu image gate.webp');"></div>
+        <div class="hero-slide" style="background-image: url('nstubirds.jpeg');"></div>
+        <div class="hero-slide" style="background-image: url('fountainpin.jpeg');"></div>
+        <div class="hero-slide" style="background-image: url('auditorium.jpg');"></div>
+    </div>
+    
+
+
+    <div class="hero-container">
+        <div class="hero-section_text">
+            <p class="hero_title">Welcome to</p>
+            <h1>Noakhali Science and Technology University</h1>
+            <p class="hero_description">Quick and Easy Access to Your Academic Records</p>
+        </div>
+    </div>
+</section>
+</div>
+<!--Hero Section ekhane theke sesh-->
+
+
+
+
+<!--information ekhan theke shoro-->
+<div>
+    <div class="informationsntu-container">
+        <div class="informationsntu-item">
+            <div class="informationsntu">
+                Noakhali Science and Technology University (NSTU) is a leading public university in Bangladesh, established in 2006. Located in Sonapur, Noakhali, the university has emerged as a center of excellence in science and technology education, research, and innovation.
+            </div>
+        </div>
+
+        <div class="informationsntu-item">
+            <div class="informationsntu">
+                NSTU is committed to providing quality higher education and fostering research that contributes to national development. The university emphasizes both theoretical knowledge and practical skills, preparing students to meet the challenges of the modern world.
+            </div>
+        </div>
+    </div>
+</div>
+<!--information ekhane theke sesh-->
+
+
+
+<!--Footer ekhan theke shoro hoyese-->
+
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-column">
+      <h4>USEFUL LINKS</h4>
+      <ul>
+        <li><a href="https://www.ugc.gov.bd">University Grants Commission (UGC)</a></li>
+        <li><a href="https://www.moedu.gov.bd/">Ministry of Education</a></li>
+        <li><a href="https://www.bangabhaban.gov.bd/">Office of Chancellor</a></li>
+        <li><a href="https://bangladesh.gov.bd/index.php">বাংলাদেশ জাতীয় তথ্য বাতায়ন</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>FACILITIES</h4>
+      <ul>
+        <li><a href="https://nstu.edu.bd/iqac.html">IQAC</a></li>
+        <li><a href="https://nstu.edu.bd/international_collaboration.html">International Collaboration & External Affairs Office</a></li>
+        <li><a href="https://nstu.edu.bd/ict_cell.html">ICT Cell</a></li>
+        <li><a href="https://nstu.edu.bd/central_library.html">Central Library</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h4>CENTERS</h4>
+      <ul>
+        <li><a href="https://nstu.edu.bd/medical_center.html">Medical Center</a></li>
+        <li><a href="https://nstu.edu.bd/research_cell.html">Research Cell</a></li>
+      </ul>
+    </div>
+  </div>
+
+</footer>
+
+<!--Footer sesh-->
+
+
+<!--admin login er page design ekhane theke shoro -->
+<div class="admin-modal" id="adminModal" aria-hidden="true">
+    <div class="admin-modal_backdrop"></div>
+    <div class="admin-modal_content" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+        <button type="button" class="admin-modal_close" aria-label="Close login form">X</button>
+        <h2 id="adminModalTitle">Admin Login</h2>
+        <p class="admin-modal_subtitle">Result Management System</p>
+        <form>
+            <div class="admin-modal_group">
+                <label for="adminEmail">Admin Registered Email</label>
+                <input id="adminEmail" type="email" placeholder="Enter email" required>
+            </div>
+            <div class="admin-modal_group">
+                <label for="adminPassword">Password</label>
+                <input id="adminPassword" type="password" placeholder="Enter password" required>
+            </div>
+            <button class="admin-modal_submit" type="submit">Login</button>
+        </form>
+        <div class="admin-modal_extra">
+            <a href="#">Forgot Password?</a>
+        </div>
+    </div>
+</div>
+
+<!--admin login er page design ekhane theke sesh -->
+
+
+<!--Result Search Page ekhan theke shoro hoyese-->
+<div class="result-modal" id="resultModal" aria-hidden="true">
+    <div class="result-modal_backdrop"></div>
+    <div class="result-modal_content" role="dialog" aria-modal="true" aria-labelledby="resultModalTitle">
+        <button type="button" class="result-modal_close" aria-label="Close result search">X</button>
+        <h2 id="resultModalTitle">Search Your Result</h2>
+        <form class="result-modal_form">
+            <div class="result-modal_row">
+                <label for="resultId">ID :</label>
+                <input id="resultId" type="text" placeholder="2211040" required>
+            </div>
+            <div class="result-modal_row">
+                <label for="resultDept">Department :</label>
+                <select id="resultDept" required>
+                    <option value="" disabled selected>Select department</option>
+                    <option value="CSTE">CSTE</option>
+                    <option value="ICE">ICE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="IIT">IIT</option>
+                </select>
+            </div>
+            <div class="result-modal_row">
+                <label for="resultSession">Session :</label>
+                <select id="resultSession" required>
+                    <option value="" disabled selected>Select session</option>
+                    <option value="2019-2020">2019-2020</option>
+                    <option value="2020-2021">2020-2021</option>
+                    <option value="2021-2022">2021-2022</option>
+                    <option value="2022-2023">2022-2023</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025">2024-2025</option>
+                </select>
+            </div>
+            <div class="result-modal_row">
+                <label for="resultTerm">Year, Term :</label>
+                <select id="resultTerm" required>
+                    <option value="" disabled selected>Select year & term</option>
+                    <option value="Y-1,T1">Y-1,T1</option>
+                    <option value="Y-1,T2">Y-1,T2</option>
+                    <option value="Y-2,T1">Y-2,T1</option>
+                    <option value="Y-2,T2">Y-2,T2</option>
+                    <option value="Y-3,T1">Y-3,T1</option>
+                    <option value="Y-3,T2">Y-3,T2</option>
+                    <option value="Y-2,T1">Y-2,T1</option>
+                    <option value="Y-4,T2">Y-4,T2</option>
+                </select>
+            </div>
+            <div class="result-modal_actions">
+                <button class="result-modal_submit" type="submit">View Result</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Result Search Page ekhane theke sesh -->
+
+
+<!--Contact Page er design ekhane theke shoro -->
+<div class="contact-modal" id="contactModal" aria-hidden="true">
+    <div class="contact-modal_backdrop"></div>
+    <div class="contact-modal_content" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+        <button type="button" class="contact-modal_close" aria-label="Close contact form">X</button>
+        <h2 id="contactModalTitle">Contact Us</h2>
+        <p class="contact-modal_subtitle">If you have any questions, feel free to contact us</p>
+        <form class="contact-modal_form">
+            <div class="contact-modal_grid">
+                <div class="contact-modal_group">
+                    <label for="contactName">Your Name</label>
+                    <input id="contactName" type="text" placeholder="Your Name" required>
+                </div>
+                <div class="contact-modal_group">
+                    <label for="contactEmail">Your Email</label>
+                    <input id="contactEmail" type="email" placeholder="Your Email" required>
+                </div>
+                <div class="contact-modal_group">
+                    <label for="contactSubject">Subject</label>
+                    <input id="contactSubject" type="text" placeholder="Subject" required>
+                </div>
+                <div class="contact-modal_group">
+                    <label for="contactPhone">Phone Number</label>
+                    <input id="contactPhone" type="text" placeholder="Phone Number">
+                </div>
+                <div class="contact-modal_group contact-modal_group--textarea">
+                    <label for="contactMessage">Your Message</label>
+                    <textarea id="contactMessage" placeholder="Your Message" required></textarea>
+                </div>
+            </div>
+            <div class="contact-modal_actions">
+                <button class="contact-modal_submit" type="submit">Send Message</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Contact Page er design ekhane theke sesh -->
+
+
+
+<script>
+(function () {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (!slides.length) {
+        return;
+    }
+
+    let activeIndex = 0;
+    const intervalMs = 8000;
+    const totalSlides = slides.length;
+    const prevBtn = document.querySelector('.hero-nav.prev');
+    const nextBtn = document.querySelector('.hero-nav.next');
+    let timerId;
+
+    const showSlide = (index) => {
+        slides[activeIndex].classList.remove('is-active');
+        activeIndex = (index + totalSlides) % totalSlides;
+        slides[activeIndex].classList.add('is-active');
+    };
+
+    const startTimer = () => {
+        timerId = window.setInterval(() => {
+            showSlide(activeIndex + 1);
+        }, intervalMs);
+    };
+
+    const resetTimer = () => {
+        window.clearInterval(timerId);
+        startTimer();
+    };
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            showSlide(activeIndex - 1);
+            resetTimer();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            showSlide(activeIndex + 1);
+            resetTimer();
+        });
+    }
+
+    startTimer();
+    const adminModal = document.getElementById('adminModal');
+    const resultModal = document.getElementById('resultModal');
+    const contactModal = document.getElementById('contactModal');
+    const openAdminBtn = document.querySelector('.js-admin-open');
+    const openResultBtn = document.querySelector('.js-result-open');
+    const openContactBtn = document.querySelector('.js-contact-open');
+    const closeAdminBtn = adminModal ? adminModal.querySelector('.admin-modal_close') : null;
+    const closeResultBtn = resultModal ? resultModal.querySelector('.result-modal_close') : null;
+    const closeContactBtn = contactModal ? contactModal.querySelector('.contact-modal_close') : null;
+    const adminBackdrop = adminModal ? adminModal.querySelector('.admin-modal_backdrop') : null;
+    const resultBackdrop = resultModal ? resultModal.querySelector('.result-modal_backdrop') : null;
+    const contactBackdrop = contactModal ? contactModal.querySelector('.contact-modal_backdrop') : null;
+    const bodyLockClass = 'modal-open';
+
+    const updateBodyLock = () => {
+        const anyOpen = (adminModal && adminModal.classList.contains('is-visible')) ||
+            (resultModal && resultModal.classList.contains('is-visible')) ||
+            (contactModal && contactModal.classList.contains('is-visible'));
+        if (anyOpen) {
+            document.body.classList.add(bodyLockClass);
+        } else {
+            document.body.classList.remove(bodyLockClass);
+        }
+    };
+
+    const toggleAdminModal = (shouldShow) => {
+        if (!adminModal) {
+            return;
+        }
+        adminModal.classList.toggle('is-visible', shouldShow);
+        adminModal.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        updateBodyLock();
+        if (shouldShow) {
+            const focusTarget = adminModal.querySelector('#adminEmail');
+            if (focusTarget) {
+                focusTarget.focus();
+            }
+        }
+    };
+
+    const toggleResultModal = (shouldShow) => {
+        if (!resultModal) {
+            return;
+        }
+        resultModal.classList.toggle('is-visible', shouldShow);
+        resultModal.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        updateBodyLock();
+        if (shouldShow) {
+            const focusTarget = resultModal.querySelector('#resultId');
+            if (focusTarget) {
+                focusTarget.focus();
+            }
+        }
+    };
+
+    const toggleContactModal = (shouldShow) => {
+        if (!contactModal) {
+            return;
+        }
+        contactModal.classList.toggle('is-visible', shouldShow);
+        contactModal.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+        updateBodyLock();
+        if (shouldShow) {
+            const focusTarget = contactModal.querySelector('#contactName');
+            if (focusTarget) {
+                focusTarget.focus();
+            }
+        }
+    };
+
+    if (openAdminBtn) {
+        openAdminBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (resultModal && resultModal.classList.contains('is-visible')) {
+                toggleResultModal(false);
+            }
+            if (contactModal && contactModal.classList.contains('is-visible')) {
+                toggleContactModal(false);
+            }
+            toggleAdminModal(true);
+        });
+    }
+
+    if (openResultBtn) {
+        openResultBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (adminModal && adminModal.classList.contains('is-visible')) {
+                toggleAdminModal(false);
+            }
+            if (contactModal && contactModal.classList.contains('is-visible')) {
+                toggleContactModal(false);
+            }
+            toggleResultModal(true);
+        });
+    }
+
+    if (openContactBtn) {
+        openContactBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (adminModal && adminModal.classList.contains('is-visible')) {
+                toggleAdminModal(false);
+            }
+            if (resultModal && resultModal.classList.contains('is-visible')) {
+                toggleResultModal(false);
+            }
+            toggleContactModal(true);
+        });
+    }
+
+    if (closeAdminBtn) {
+        closeAdminBtn.addEventListener('click', () => toggleAdminModal(false));
+    }
+
+    if (closeResultBtn) {
+        closeResultBtn.addEventListener('click', () => toggleResultModal(false));
+    }
+
+    if (closeContactBtn) {
+        closeContactBtn.addEventListener('click', () => toggleContactModal(false));
+    }
+
+    if (adminBackdrop) {
+        adminBackdrop.addEventListener('click', () => toggleAdminModal(false));
+    }
+
+    if (resultBackdrop) {
+        resultBackdrop.addEventListener('click', () => toggleResultModal(false));
+    }
+
+    if (contactBackdrop) {
+        contactBackdrop.addEventListener('click', () => toggleContactModal(false));
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            if (adminModal && adminModal.classList.contains('is-visible')) {
+                toggleAdminModal(false);
+            }
+            if (resultModal && resultModal.classList.contains('is-visible')) {
+                toggleResultModal(false);
+            }
+            if (contactModal && contactModal.classList.contains('is-visible')) {
+                toggleContactModal(false);
+            }
+        }
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Result Editor | Admin</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="admin-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">Admin Panel</span>
+            <span class="sidebar-subtitle">Result Management Suite</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html" class="sidebar-link"><span>🏠</span>Dashboard</a>
+            <a href="#" class="sidebar-link"><span>➕</span>Add Student</a>
+            <a href="#" class="sidebar-link"><span>👥</span>Manage Students</a>
+            <a href="#" class="sidebar-link"><span>📝</span>Add Result</a>
+            <a href="#" class="sidebar-link is-active"><span>📊</span>Manage Results</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="sidebar-logout" id="logoutButton">Logout</button>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <header class="content-header">
+            <div>
+                <h1 id="studentTitle">Loading student...</h1>
+                <p id="studentSubtitle">Please wait while we fetch the record.</p>
+            </div>
+            <button class="admin-button admin-button--apply" id="backToDashboard">Back to Dashboard</button>
+        </header>
+
+        <section class="admin-card" id="detailsCard">
+            <div class="details-header" id="studentSummary" hidden></div>
+
+            <form id="courseForm">
+                <div class="table-wrapper">
+                    <table class="course-table">
+                        <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Credits</th>
+                            <th>GPA</th>
+                            <th>Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="courseTableBody"></tbody>
+                    </table>
+                    <div class="table-empty" id="courseTableEmpty" hidden>
+                        No courses yet. Add a course to begin.
+                    </div>
+                </div>
+                <p class="table-note">TGPA recalculates from course credits; grades update automatically from the GPA field.</p>
+                <div class="course-actions">
+                    <button type="button" class="inline-button inline-button--add" id="addCourse">Add Course</button>
+                    <div>
+                        <button type="button" class="inline-button inline-button--danger" id="cancelChanges">Cancel</button>
+                        <button type="submit" class="inline-button inline-button--primary">Save Changes</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="message" id="feedbackMessage" hidden></div>
+        </section>
+    </main>
+</div>
+
+<script>
+(function () {
+    const defaultStudents = [
+        {
+            id: '2211040',
+            name: 'Nusrat Jahan',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T1',
+            tgpa: 3.82,
+            cgpa: 3.65,
+            department: 'CSTE',
+            courses: [
+                { code: 'CSTE2201', name: 'Data Structures', credits: 3, gpa: 3.7, grade: 'A-' },
+                { code: 'CSTE2202', name: 'Algorithms', credits: 3, gpa: 3.9, grade: 'A' },
+                { code: 'MATH2203', name: 'Discrete Mathematics', credits: 3, gpa: 3.6, grade: 'A-' }
+            ]
+        },
+        {
+            id: '2211045',
+            name: 'Mahmud Hasan',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T1',
+            tgpa: 3.55,
+            cgpa: 3.42,
+            department: 'CSTE',
+            courses: [
+                { code: 'CSTE2201', name: 'Data Structures', credits: 3, gpa: 3.4, grade: 'B+' },
+                { code: 'CSTE2204', name: 'Object Oriented Programming', credits: 3, gpa: 3.6, grade: 'A-' },
+                { code: 'STAT2205', name: 'Probability and Statistics', credits: 3, gpa: 3.7, grade: 'A-' }
+            ]
+        },
+        {
+            id: '2211050',
+            name: 'Tahmid Alam',
+            session: '2023-2024',
+            year: 'Y-2',
+            term: 'T2',
+            tgpa: 3.9,
+            cgpa: 3.74,
+            department: 'ICE',
+            courses: [
+                { code: 'ICE2301', name: 'Database Systems', credits: 3, gpa: 3.9, grade: 'A' },
+                { code: 'ICE2303', name: 'Web Engineering', credits: 3, gpa: 3.8, grade: 'A-' },
+                { code: 'ICE2307', name: 'Computer Networks', credits: 3, gpa: 4.0, grade: 'A+' }
+            ]
+        },
+        {
+            id: '2111002',
+            name: 'Sharmin Akter',
+            session: '2022-2023',
+            year: 'Y-3',
+            term: 'T1',
+            tgpa: 3.68,
+            cgpa: 3.58,
+            department: 'FTNS',
+            courses: [
+                { code: 'EEE3301', name: 'Signals and Systems', credits: 3, gpa: 3.6, grade: 'A-' },
+                { code: 'EEE3305', name: 'Electromagnetics', credits: 3, gpa: 3.7, grade: 'A-' },
+                { code: 'EEE3309', name: 'Microprocessors', credits: 3, gpa: 3.75, grade: 'A-' }
+            ]
+        }
+    ];
+
+    const defaultCourses = [
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'CSTE2201', name: 'Data Structures', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'CSTE2202', name: 'Algorithms', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T1', department: 'CSTE', code: 'MATH2203', name: 'Discrete Mathematics', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2301', name: 'Database Systems', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2303', name: 'Web Engineering', credits: 3 },
+        { session: '2023-2024', year: 'Y-2', term: 'T2', department: 'ICE', code: 'ICE2307', name: 'Computer Networks', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3301', name: 'Signals and Systems', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3305', name: 'Electromagnetics', credits: 3 },
+        { session: '2022-2023', year: 'Y-3', term: 'T1', department: 'FTNS', code: 'EEE3309', name: 'Microprocessors', credits: 3 }
+    ];
+
+    const titleElement = document.getElementById('studentTitle');
+    const subtitleElement = document.getElementById('studentSubtitle');
+    const summaryContainer = document.getElementById('studentSummary');
+    const tableBody = document.getElementById('courseTableBody');
+    const tableEmpty = document.getElementById('courseTableEmpty');
+    const addCourseButton = document.getElementById('addCourse');
+    const cancelButton = document.getElementById('cancelChanges');
+    const backButton = document.getElementById('backToDashboard');
+    const logoutButton = document.getElementById('logoutButton');
+    const feedbackMessage = document.getElementById('feedbackMessage');
+    const courseForm = document.getElementById('courseForm');
+    const queryParams = new URLSearchParams(window.location.search);
+
+    const normalizeText = (value) => {
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+        if (typeof value === 'number') {
+            return value.toString();
+        }
+        return '';
+    };
+
+    const recalculateCgpaByCohort = (students) => {
+        const groups = new Map();
+        students.forEach((item, index) => {
+            const session = normalizeText(item.session);
+            const year = normalizeText(item.year);
+            const term = normalizeText(item.term);
+            const key = `${session}|${year}|${term}`;
+            if (!groups.has(key)) {
+                groups.set(key, []);
+            }
+            groups.get(key).push({ index, tgpa: Number(item.tgpa) || 0 });
+        });
+
+        const updated = students.map((item) => {
+            const tgpaValue = Number(item.tgpa);
+            return {
+                ...item,
+                tgpa: Number.isFinite(tgpaValue) ? Number(tgpaValue.toFixed(2)) : 0,
+                cgpa: 0
+            };
+        });
+
+        groups.forEach((entries) => {
+            if (!entries.length) {
+                return;
+            }
+            const total = entries.reduce((acc, entry) => acc + entry.tgpa, 0);
+            const average = entries.length ? Number((total / entries.length).toFixed(2)) : 0;
+            entries.forEach(({ index }) => {
+                updated[index] = {
+                    ...updated[index],
+                    cgpa: average
+                };
+            });
+        });
+
+        return updated;
+    };
+
+    const cloneStudentRecords = (students) => (
+        Array.isArray(students) ? students : []
+    ).map((student) => ({
+        ...student,
+        courses: Array.isArray(student.courses)
+            ? student.courses.map((course) => ({ ...course }))
+            : []
+    }));
+
+    const encodeStateForQuery = (payload) => {
+        try {
+            return encodeURIComponent(JSON.stringify(payload));
+        } catch (error) {
+            return '';
+        }
+    };
+
+    const decodeStatePayload = (encoded) => {
+        if (!encoded) {
+            return null;
+        }
+        try {
+            return JSON.parse(decodeURIComponent(encoded));
+        } catch (error) {
+            return null;
+        }
+    };
+
+    const state = (() => {
+        const parsed = decodeStatePayload(queryParams.get('state'));
+        const studentsSource = Array.isArray(parsed?.students) ? parsed.students : defaultStudents;
+        const coursesSource = Array.isArray(parsed?.courses) ? parsed.courses : defaultCourses;
+        return {
+            students: recalculateCgpaByCohort(cloneStudentRecords(studentsSource)),
+            courses: (Array.isArray(coursesSource) ? coursesSource : []).map((course) => ({ ...course }))
+        };
+    })();
+
+    const createStateSnapshot = () => ({
+        students: state.students.map((item) => ({
+            ...item,
+            courses: Array.isArray(item.courses)
+                ? item.courses.map((course) => ({ ...course }))
+                : []
+        })),
+        courses: state.courses.map((course) => ({ ...course }))
+    });
+
+    const syncUrlState = (selectedId) => {
+        const encoded = encodeStateForQuery(createStateSnapshot());
+        if (encoded) {
+            queryParams.set('state', encoded);
+        } else {
+            queryParams.delete('state');
+        }
+        if (selectedId) {
+            queryParams.set('studentId', selectedId);
+        } else {
+            queryParams.delete('studentId');
+        }
+        const queryString = queryParams.toString();
+        const newUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}${window.location.hash}`;
+        window.history.replaceState({}, '', newUrl);
+    };
+
+    const formatSummary = (student) => {
+        summaryContainer.innerHTML = '';
+        const fragments = [
+            { label: 'Student ID', value: student.id },
+            { label: 'Department', value: student.department },
+            { label: 'Session', value: student.session },
+            { label: 'Year', value: student.year },
+            { label: 'Term', value: student.term },
+            { label: 'TGPA', value: student.tgpa.toFixed(2) },
+            { label: 'CGPA', value: student.cgpa.toFixed(2) }
+        ];
+        fragments.forEach((item) => {
+            const span = document.createElement('span');
+            span.innerHTML = `<strong>${item.label}:</strong> ${item.value}`;
+            summaryContainer.appendChild(span);
+        });
+        summaryContainer.hidden = false;
+    };
+
+    const deriveGradeFromGpa = (gpaValue) => {
+        if (Number.isNaN(gpaValue)) {
+            return '';
+        }
+        if (gpaValue >= 4) {
+            return 'A+';
+        }
+        if (gpaValue >= 3.75) {
+            return 'A';
+        }
+        if (gpaValue >= 3.5) {
+            return 'A-';
+        }
+        if (gpaValue >= 3.25) {
+            return 'B+';
+        }
+        if (gpaValue >= 3) {
+            return 'B';
+        }
+        if (gpaValue >= 2.75) {
+            return 'B-';
+        }
+        if (gpaValue >= 2.5) {
+            return 'C+';
+        }
+        if (gpaValue >= 2.25) {
+            return 'C-';
+        }
+        if (gpaValue >= 2) {
+            return 'D';
+        }
+        if (gpaValue >= 0) {
+            return 'F';
+        }
+        return '';
+    };
+
+    const createCourseRow = (course = { code: '', name: '', credits: '', gpa: '', grade: '' }) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <button type="button" class="inline-button inline-button--remove" data-action="remove">Remove</button>
+            </td>
+        `;
+
+        const [codeCell, nameCell, creditsCell, gpaCell, gradeCell] = row.querySelectorAll('td');
+
+        const codeInput = document.createElement('input');
+        codeInput.type = 'text';
+        codeInput.value = course.code;
+        codeInput.placeholder = 'e.g. CSTE2201';
+        codeInput.required = true;
+        codeCell.appendChild(codeInput);
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.value = course.name;
+        nameInput.placeholder = 'Course title';
+        nameInput.required = true;
+        nameCell.appendChild(nameInput);
+
+        const creditsInput = document.createElement('input');
+        creditsInput.type = 'number';
+        creditsInput.min = '0';
+        creditsInput.step = '0.5';
+        creditsInput.value = course.credits;
+        creditsInput.placeholder = '3';
+        creditsInput.required = true;
+        creditsCell.appendChild(creditsInput);
+
+        const gpaInput = document.createElement('input');
+        gpaInput.type = 'number';
+        gpaInput.min = '0';
+        gpaInput.max = '4';
+        gpaInput.step = '0.01';
+        gpaInput.value = course.gpa;
+        gpaInput.placeholder = '4.00';
+        gpaInput.required = true;
+        gpaCell.appendChild(gpaInput);
+
+        const gradeInput = document.createElement('input');
+        gradeInput.type = 'text';
+        gradeInput.readOnly = true;
+        gradeInput.placeholder = 'Auto';
+        gradeInput.value = deriveGradeFromGpa(Number.parseFloat(course.gpa));
+        gradeCell.appendChild(gradeInput);
+
+        const updateGradeField = () => {
+            const gpaValue = Number.parseFloat(gpaInput.value);
+            gradeInput.value = deriveGradeFromGpa(gpaValue);
+        };
+
+        gpaInput.addEventListener('input', updateGradeField);
+        updateGradeField();
+
+        return row;
+    };
+
+    const renderCourses = (courses) => {
+        tableBody.innerHTML = '';
+        if (!courses.length) {
+            tableEmpty.hidden = false;
+            return;
+        }
+        tableEmpty.hidden = true;
+        courses.forEach((course) => {
+            tableBody.appendChild(createCourseRow(course));
+        });
+    };
+
+    const showMessage = (message, type = 'info') => {
+        feedbackMessage.textContent = message;
+        feedbackMessage.classList.remove('message--error', 'message--success');
+        if (type === 'error') {
+            feedbackMessage.classList.add('message--error');
+        }
+        if (type === 'success') {
+            feedbackMessage.classList.add('message--success');
+        }
+        feedbackMessage.hidden = false;
+    };
+
+    const hideMessage = () => {
+        feedbackMessage.hidden = true;
+    };
+
+    const selectedStudentId = queryParams.get('studentId') || '';
+    let student = state.students.find((item) => item.id === selectedStudentId) || null;
+
+    if (!student) {
+        titleElement.textContent = 'Student not found';
+        subtitleElement.textContent = 'Return to dashboard and choose a student again.';
+        summaryContainer.hidden = true;
+        tableBody.innerHTML = '';
+        tableEmpty.hidden = false;
+        tableEmpty.textContent = 'No student data available.';
+        courseForm.querySelectorAll('input, select, button').forEach((element) => {
+            element.disabled = true;
+        });
+        backButton.focus();
+        syncUrlState('');
+        return;
+    }
+
+    syncUrlState(student.id);
+    titleElement.textContent = student.name;
+    subtitleElement.textContent = `Editing result details for ${student.id}`;
+    formatSummary(student);
+    renderCourses(student.courses || []);
+
+    addCourseButton.addEventListener('click', () => {
+        hideMessage();
+        tableBody.appendChild(createCourseRow());
+        tableEmpty.hidden = true;
+    });
+
+    tableBody.addEventListener('click', (event) => {
+        const target = event.target;
+        if (target instanceof HTMLButtonElement && target.dataset.action === 'remove') {
+            hideMessage();
+            const row = target.closest('tr');
+            if (row) {
+                row.remove();
+            }
+            if (!tableBody.children.length) {
+                tableEmpty.hidden = false;
+            }
+        }
+    });
+
+    cancelButton.addEventListener('click', () => {
+        hideMessage();
+        renderCourses(student.courses || []);
+    });
+
+    backButton.addEventListener('click', () => {
+        const encoded = encodeStateForQuery(createStateSnapshot());
+        const target = encoded ? `admin-dashboard.html?state=${encoded}` : 'admin-dashboard.html';
+        window.location.href = target;
+    });
+
+    if (logoutButton) {
+        logoutButton.addEventListener('click', () => {
+            window.location.href = 'Homepage.html';
+        });
+    }
+
+    const collectCourses = () => {
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+        const courses = [];
+        for (const row of rows) {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length < 5) {
+                continue;
+            }
+            const [codeInput, nameInput, creditsInput, gpaInput, gradeInput] = inputs;
+            const credits = Number.parseFloat(creditsInput.value);
+            const gpa = Number.parseFloat(gpaInput.value);
+            if (!codeInput.value.trim() || !nameInput.value.trim() || Number.isNaN(credits) || Number.isNaN(gpa)) {
+                codeInput.focus();
+                showMessage('Complete all course fields before saving.', 'error');
+                return null;
+            }
+            if (gpa < 0 || gpa > 4) {
+                gpaInput.focus();
+                showMessage('GPA must be between 0.00 and 4.00.', 'error');
+                return null;
+            }
+            if (credits <= 0) {
+                creditsInput.focus();
+                showMessage('Credits must be greater than zero.', 'error');
+                return null;
+            }
+            const grade = deriveGradeFromGpa(gpa);
+            gradeInput.value = grade;
+
+            courses.push({
+                code: codeInput.value.trim(),
+                name: nameInput.value.trim(),
+                credits: Number(credits.toFixed(2)),
+                gpa: Number(gpa.toFixed(2)),
+                grade
+            });
+        }
+        return courses;
+    };
+
+    courseForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        hideMessage();
+        const courses = collectCourses();
+        if (!courses) {
+            return;
+        }
+        const totalCredits = courses.reduce((acc, course) => acc + course.credits, 0);
+        const totalWeighted = courses.reduce((acc, course) => acc + (course.credits * course.gpa), 0);
+        const computedTgpa = totalCredits > 0 ? Number((totalWeighted / totalCredits).toFixed(2)) : 0;
+
+        const updatedStudent = {
+            ...student,
+            courses,
+            tgpa: computedTgpa,
+            cgpa: 0
+        };
+
+        state.students = state.students.map((item) => (
+            item.id === updatedStudent.id ? updatedStudent : item
+        ));
+        state.students = recalculateCgpaByCohort(state.students);
+        student = state.students.find((item) => item.id === updatedStudent.id) || updatedStudent;
+        syncUrlState(student.id);
+        formatSummary(student);
+        renderCourses(student.courses || []);
+        showMessage('Result details saved successfully.', 'success');
+    });
+})();
+</script>
+</body>
+</html>

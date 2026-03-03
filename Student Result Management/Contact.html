@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Result System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f6ff;
+  padding:20px;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border:2px solid #000;
+}
+
+h2,h3{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+input{
+  padding:6px;
+  width:100%;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+table th,table td{
+  border:1px solid #000;
+  padding:8px;
+  text-align:center;
+}
+
+button{
+  padding:8px 20px;
+  margin-top:15px;
+  background:#1673ff;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0b56d0;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.result{
+  margin-top:30px;
+  border-top:2px solid #000;
+  padding-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Admin Result Entry</h2>
+
+<div class="grid">
+  <input id="name" placeholder="Student Name">
+  <input id="id" placeholder="Student ID">
+  <input id="session" placeholder="Session">
+  <input id="dept" placeholder="Department">
+</div>
+
+<h3>Course Entry</h3>
+
+<table>
+<thead>
+<tr>
+  <th>Course Code</th>
+  <th>Course Name</th>
+  <th>Credits</th>
+  <th>Grade Point</th>
+</tr>
+</thead>
+<tbody id="courseBody">
+<tr>
+  <td><input></td>
+  <td><input></td>
+  <td><input type="number" class="credit"></td>
+  <td><input type="number" class="gp" step="0.01"></td>
+</tr>
+</tbody>
+</table>
+
+<button onclick="addRow()">+ Add Course</button>
+<button onclick="generateResult()">Generate Result</button>
+
+<div class="result" id="resultBox" style="display:none">
+
+<h2>Academic Result</h2>
+
+<p><b>Name:</b> <span id="rName"></span></p>
+<p><b>ID:</b> <span id="rID"></span></p>
+<p><b>Session:</b> <span id="rSession"></span></p>
+<p><b>Department:</b> <span id="rDept"></span></p>
+
+<table>
+<thead>
+<tr>
+  <th>Course Code</th>
+  <th>Course Name</th>
+  <th>Credits</th>
+  <th>GP</th>
+</tr>
+</thead>
+<tbody id="finalTable"></tbody>
+</table>
+
+<h3>
+Credit Completed: <span id="creditDone"></span><br>
+TGPA: <span id="tgpa"></span><br>
+CGPA: <span id="cgpa"></span>
+</h3>
+
+</div>
+
+</div>
+
+<script>
+function addRow(){
+  document.getElementById("courseBody").innerHTML += `
+  <tr>
+    <td><input></td>
+    <td><input></td>
+    <td><input type="number" class="credit"></td>
+    <td><input type="number" class="gp" step="0.01"></td>
+  </tr>`;
+}
+
+function generateResult(){
+  let credits = document.querySelectorAll(".credit");
+  let gps = document.querySelectorAll(".gp");
+
+  let totalCredit = 0;
+  let totalPoint = 0;
+
+  credits.forEach((c,i)=>{
+    let cr = parseFloat(c.value) || 0;
+    let gp = parseFloat(gps[i].value) || 0;
+    totalCredit += cr;
+    totalPoint += cr * gp;
+  });
+
+  let tgpa = (totalPoint / totalCredit).toFixed(2);
+
+  document.getElementById("rName").innerText = name.value;
+  document.getElementById("rID").innerText = id.value;
+  document.getElementById("rSession").innerText = session.value;
+  document.getElementById("rDept").innerText = dept.value;
+
+  document.getElementById("creditDone").innerText = totalCredit;
+  document.getElementById("tgpa").innerText = tgpa;
+  document.getElementById("cgpa").innerText = tgpa;
+
+  let rows = document.querySelectorAll("#courseBody tr");
+  let final = document.getElementById("finalTable");
+  final.innerHTML = "";
+
+  rows.forEach(r=>{
+    let cols = r.querySelectorAll("input");
+    final.innerHTML += `
+      <tr>
+        <td>${cols[0].value}</td>
+        <td>${cols[1].value}</td>
+        <td>${cols[2].value}</td>
+        <td>${cols[3].value}</td>
+      </tr>`;
+  });
+
+  document.getElementById("resultBox").style.display = "block";
+}
+</script>
+
+</body>
+</html>
